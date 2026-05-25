@@ -117,6 +117,16 @@
             transform: translateY(-1px);
         }
         .menu-btn:active { transform: translateY(1px); }
+        .menu-btn.ec-btn {
+            background: linear-gradient(135deg, rgba(5,20,35,0.95), rgba(10,30,50,0.95)) !important;
+            border-color: rgba(79,195,247,0.5) !important;
+            color: #4fc3f7 !important;
+        }
+        .menu-btn.ec-btn:hover {
+            border-color: #4fc3f7 !important;
+            color: #9ee8ff !important;
+            box-shadow: 0 0 25px rgba(79,195,247,0.25), 0 4px 20px rgba(0,0,0,0.6) !important;
+        }
         #btn-resume {
             background: linear-gradient(135deg, rgba(10,35,15,0.95), rgba(15,50,20,0.95)) !important;
             color: #4ade80 !important; border-color: rgba(74,222,128,0.5) !important;
@@ -622,7 +632,8 @@
         <button class="menu-btn" onclick="openModal('map-selector')">⬡ Nueva Partida</button>
         <button class="menu-btn" onclick="openInstructions()">◈ Cómo Jugar</button>
         <button class="menu-btn" onclick="openSettings()">◎ Ajustes</button>
-        <button class="menu-btn" style="border-color: rgba(199,125,255,0.4); color: #c77dff; margin-bottom: 48px;" onclick="openModal('about-modal')">✦ Créditos</button>
+        <button class="menu-btn" style="border-color: rgba(199,125,255,0.4); color: #c77dff; margin-bottom: 12px;" onclick="openModal('about-modal')">✦ Créditos</button>
+        <button class="menu-btn" style="border-color: rgba(0,150,255,0.5); color: #4fc3f7; margin-bottom: 48px;" onclick="window.location.href='https://nicotips27.github.io/ec-download/'" class="menu-btn ec-btn">🏠 Volver a EC Games</button>
 
         <div style="
             position: absolute; bottom: 14px; left: 0; right: 0;
@@ -635,6 +646,33 @@
             pointer-events: none;
             user-select: none;
         ">© 2026 Estalingrado Corp. — Sistema Intranet Integrado.</div>
+
+        <!-- Efectos ambientales del menú -->
+        <canvas id="menu-particles" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
+        <script>
+        (function(){
+            const cvs = document.getElementById('menu-particles');
+            const ctx2 = cvs.getContext('2d');
+            let W, H, particles = [];
+            function resize(){ W = cvs.width = window.innerWidth; H = cvs.height = window.innerHeight; }
+            resize(); window.addEventListener('resize', resize);
+            for(let i=0;i<60;i++) particles.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,size:Math.random()*2+0.5,alpha:Math.random()*0.5+0.2,color:Math.random()>0.5?'#e8b84b':'#c77dff'});
+            function drawMenuParticles(){
+                if(document.getElementById('main-menu').style.display === 'none'){ requestAnimationFrame(drawMenuParticles); return; }
+                ctx2.clearRect(0,0,W,H);
+                particles.forEach(p=>{
+                    p.x+=p.vx; p.y+=p.vy;
+                    if(p.x<0) p.x=W; if(p.x>W) p.x=0; if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+                    ctx2.globalAlpha = p.alpha * (0.6 + Math.sin(Date.now()*0.001 + p.x*0.01)*0.4);
+                    ctx2.fillStyle = p.color;
+                    ctx2.beginPath(); ctx2.arc(p.x,p.y,p.size,0,Math.PI*2); ctx2.fill();
+                });
+                ctx2.globalAlpha = 1;
+                requestAnimationFrame(drawMenuParticles);
+            }
+            drawMenuParticles();
+        })();
+        </script>
     </div>
 
     <!-- 
@@ -1036,6 +1074,11 @@
                     <button class="speed-btn active" onclick="setSpeed(1, this)">1x</button>
                     <button class="speed-btn" onclick="setSpeed(2, this)">2x</button>
                     <button class="speed-btn" onclick="setSpeed(5, this)">5x</button>
+                </div>
+                <!-- DÍA/NOCHE -->
+                <div id="daynight-indicator" style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(232,184,75,0.12);text-align:center;">
+                    <div id="daynight-icon" style="font-size:14px;margin-bottom:2px;">☀️</div>
+                    <div id="daynight-text" style="font-family:'Rajdhani',sans-serif;font-size:9px;color:rgba(232,184,75,0.5);letter-spacing:1px;text-transform:uppercase;">Día</div>
                 </div>
                 <!-- FE DIVINA -->
                 <div id="faith-bar-container">
@@ -1554,11 +1597,11 @@
         function renderChronicles() {
             let list = document.getElementById('chronicles-list');
             if(!list) return;
-            list.innerHTML = chronicles.slice(0,18).map((c,i) =>
-                `<div class="chronicle-entry${i<2?' new':''}" style="${c.highlight?'color:#c8a050;':''}">`+
+            list.innerHTML = chronicles.slice(0,20).map((c,i) =>
+                `<div class="chronicle-entry${i<3?' new':''}" style="${c.highlight?'color:#c8a050;font-weight:600;':''}">`+
                 `<span class="chron-time">Año ${c.year}</span>${c.text}</div>`
             ).join('');
-            list.scrollTop = list.scrollHeight;
+            if(chroniclesOpen) list.scrollTop = 0;
             // Pulso: abrir sólo si estaba cerrado, cerrar tras 5s
             let panel = document.getElementById('chronicles-panel');
             let hdr   = document.getElementById('chronicles-header');
@@ -2091,20 +2134,56 @@
         function spawnFloatingText(x, y, text, color) { if(gameState !== 'PLAYING') return; floatingTexts.push(new FloatingText(x, y, text, color)); }
 
         class Particle {
-            constructor(x, y, color, vx, vy, life) { this.x = x; this.y = y; this.color = color; this.vx = vx; this.vy = vy; this.life = life; this.maxLife = life; }
-            update() { this.x += this.vx; this.y += this.vy; this.life--; }
-            draw(ctx) { ctx.globalAlpha = Math.max(0, this.life / this.maxLife); ctx.fillStyle = this.color; ctx.fillRect(this.x * TILE_SIZE, this.y * TILE_SIZE, 3, 3); ctx.globalAlpha = 1; }
+            constructor(x, y, color, vx, vy, life, size, type) { 
+                this.x = x; this.y = y; this.color = color; this.vx = vx; this.vy = vy; 
+                this.life = life; this.maxLife = life; this.size = size || 3; 
+                this.type = type || 'square'; this.rot = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.2;
+            }
+            update() { this.x += this.vx; this.y += this.vy; this.life--; this.rot += this.rotSpeed; }
+            draw(ctx) { 
+                let alpha = Math.max(0, this.life / this.maxLife);
+                ctx.globalAlpha = alpha; 
+                ctx.fillStyle = this.color; 
+                let px = this.x * TILE_SIZE + 10, py = this.y * TILE_SIZE + 10;
+                if(this.type === 'circle') {
+                    ctx.beginPath(); ctx.arc(px, py, this.size * alpha, 0, Math.PI*2); ctx.fill();
+                } else if(this.type === 'star') {
+                    ctx.save(); ctx.translate(px, py); ctx.rotate(this.rot);
+                    ctx.beginPath(); for(let i=0;i<5;i++){ ctx.lineTo(Math.cos((i*4*Math.PI/5)-Math.PI/2)*this.size*alpha, Math.sin((i*4*Math.PI/5)-Math.PI/2)*this.size*alpha); }
+                    ctx.fill(); ctx.restore();
+                } else {
+                    ctx.fillRect(px - this.size*alpha/2, py - this.size*alpha/2, this.size*alpha, this.size*alpha); 
+                }
+                ctx.globalAlpha = 1; 
+            }
         }
-        function spawnParticles(x, y, color, amount, lifeBase) {
+        function spawnParticles(x, y, color, amount, lifeBase, type) {
             if(gameState !== 'PLAYING') return;
-            if (particles.length > 800) return; 
-            for(let i=0; i<amount; i++) particles.push(new Particle(x + Math.random(), y + Math.random(), color, (Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, lifeBase + Math.random()*20));
+            if (particles.length > 1000) return; 
+            for(let i=0; i<amount; i++) {
+                let ptype = type || (Math.random() < 0.3 ? 'circle' : (Math.random() < 0.5 ? 'star' : 'square'));
+                let size = 2 + Math.random() * 4;
+                particles.push(new Particle(x + Math.random(), y + Math.random(), color, (Math.random()-0.5)*0.25, (Math.random()-0.5)*0.25 - 0.05, lifeBase + Math.random()*25, size, ptype));
+            }
         }
 
         class Animal {
-            constructor(x, y) { this.x = x; this.y = y; this.vx = 0; this.vy = 0; this.dead = false; this.type = Math.random() < 0.5 ? 'sheep' : 'cow'; this.dir = 1; }
+            constructor(x, y) { 
+                this.x = x; this.y = y; this.vx = 0; this.vy = 0; this.dead = false; 
+                let r = Math.random();
+                this.type = r < 0.35 ? 'sheep' : (r < 0.65 ? 'cow' : (r < 0.85 ? 'chicken' : 'pig'));
+                this.dir = 1; this.animTimer = 0; this.state = 'idle';
+            }
             update() {
-                if(Math.random() < 0.02) { this.vx = (Math.random()-0.5)*0.1; this.vy = (Math.random()-0.5)*0.1; this.dir = this.vx > 0 ? 1 : -1; }
+                this.animTimer++;
+                if(Math.random() < 0.015) { 
+                    this.vx = (Math.random()-0.5)*0.12; this.vy = (Math.random()-0.5)*0.12; 
+                    this.dir = this.vx > 0 ? 1 : -1; 
+                    this.state = 'walk';
+                }
+                if(Math.random() < 0.005) this.state = 'idle';
+                if(this.state === 'idle') { this.vx *= 0.9; this.vy *= 0.9; }
                 let nx = this.x + this.vx; let ny = this.y + this.vy;
                 let tx = Math.floor(nx); let ty = Math.floor(ny);
                 if(tx>=0 && tx<cols && ty>=0 && ty<rows && (grid[tx][ty].type === TERRAIN.GRASS || grid[tx][ty].type === TERRAIN.SAND || grid[tx][ty].type === TERRAIN.FOREST) && !grid[tx][ty].hasHouse) { this.x = nx; this.y = ny; }
@@ -2998,8 +3077,8 @@
             for (let x = 0; x < cols; x++) { grid[x] = []; for (let y = 0; y < rows; y++) grid[x][y] = new Tile(x, y); }
             generateTerrain(mapType);
             
-            // Generar Vida Salvaje Inicial
-            for(let i=0; i<80; i++) {
+            // Generar Vida Salvaje Inicial (más variedad)
+            for(let i=0; i<100; i++) {
                 let tx = Math.floor(Math.random()*cols); let ty = Math.floor(Math.random()*rows);
                 if (grid[tx][ty].type === TERRAIN.GRASS || grid[tx][ty].type === TERRAIN.FOREST) animals.push(new Animal(tx, ty));
             }
@@ -3140,9 +3219,77 @@
         let climateTimer = 0;
         let climateEvent = null; // tormenta activa, erupción, etc.
 
+        // Sistema de clima mejorado con efectos visuales avanzados
+        let weatherIntensity = 1.0;
+        let weatherParticles = [];
+
+        function spawnWeatherParticle(type) {
+            let W = canvas.width, H = canvas.height;
+            let p = {type, life: 100 + Math.random()*100};
+            switch(type) {
+                case 'rain': p.x = Math.random()*W; p.y = -10; p.vx = -1 + Math.random()*2; p.vy = 8 + Math.random()*4; p.len = 8 + Math.random()*8; break;
+                case 'snow': p.x = Math.random()*W; p.y = -10; p.vx = (Math.random()-0.5)*2; p.vy = 1 + Math.random()*2; p.size = 2 + Math.random()*3; break;
+                case 'ash': p.x = Math.random()*W; p.y = -5; p.vx = (Math.random()-0.5)*1.5; p.vy = 0.5 + Math.random()*1.5; p.size = 1 + Math.random()*2; break;
+                case 'spore': p.x = Math.random()*W; p.y = Math.random()*H; p.vx = (Math.random()-0.5)*0.5; p.vy = (Math.random()-0.5)*0.5; p.size = 1 + Math.random(); break;
+                case 'petal': p.x = Math.random()*W; p.y = -5; p.vx = 1 + Math.random()*2; p.vy = 0.5 + Math.random()*1; p.size = 2 + Math.random()*3; p.rot = Math.random()*Math.PI*2; break;
+            }
+            return p;
+        }
+
+        function updateWeatherParticles() {
+            if(gameState !== 'PLAYING') return;
+            // Spawn new particles based on climate
+            let spawnRate = {temperate:0,tropical:3,arid:0,cold:4,stormy:8,volcanic_climate:3,plague:2,blessed:1}[currentClimate] || 0;
+            for(let i=0;i<spawnRate;i++) {
+                let type = {temperate:'petal',tropical:'rain',arid:'ash',cold:'snow',stormy:'rain',volcanic_climate:'ash',plague:'spore',blessed:'petal'}[currentClimate];
+                if(Math.random() < 0.3) weatherParticles.push(spawnWeatherParticle(type));
+            }
+            // Update existing
+            for(let i=weatherParticles.length-1;i>=0;i--) {
+                let p = weatherParticles[i];
+                p.x += p.vx; p.y += p.vy; p.life--;
+                if(p.type === 'snow') p.vx += Math.sin(Date.now()*0.001 + p.y*0.01)*0.02;
+                if(p.type === 'petal') p.rot += 0.02;
+                if(p.x < -20 || p.x > canvas.width+20 || p.y > canvas.height+20 || p.life <= 0) weatherParticles.splice(i,1);
+            }
+        }
+
+        function drawWeatherParticles() {
+            weatherParticles.forEach(p => {
+                let alpha = Math.min(1, p.life / 50);
+                ctx.globalAlpha = alpha * 0.6;
+                switch(p.type) {
+                    case 'rain':
+                        ctx.strokeStyle = 'rgba(150,200,255,0.6)'; ctx.lineWidth = 1;
+                        ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p.x+p.vx*1.5,p.y+p.len); ctx.stroke();
+                        break;
+                    case 'snow':
+                        ctx.fillStyle = 'rgba(220,240,255,0.8)';
+                        ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+                        break;
+                    case 'ash':
+                        ctx.fillStyle = 'rgba(180,80,20,0.5)';
+                        ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+                        break;
+                    case 'spore':
+                        ctx.fillStyle = 'rgba(60,120,40,0.4)';
+                        ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+                        break;
+                    case 'petal':
+                        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+                        ctx.fillStyle = 'rgba(255,200,220,0.5)';
+                        ctx.beginPath(); ctx.ellipse(0,0,p.size,p.size*0.6,0,0,Math.PI*2); ctx.fill();
+                        ctx.restore();
+                        break;
+                }
+            });
+            ctx.globalAlpha = 1;
+        }
+
         function updateClimate() {
             if(gameState !== 'PLAYING') return;
             climateTimer++;
+            updateWeatherParticles();
 
             // Efectos periódicos por clima
             switch(currentClimate) {
@@ -3226,6 +3373,16 @@
             timeTick++;
             updateClimate();
             updateFaithGeneration();
+            // Actualizar indicador día/noche
+            if(timeTick % 60 === 0) {
+                let dn = getDayNightOverlay();
+                let icon = document.getElementById('daynight-icon');
+                let text = document.getElementById('daynight-text');
+                if(icon && text) {
+                    if(dn.isNight) { icon.innerText = '🌙'; text.innerText = 'Noche'; text.style.color = 'rgba(150,180,255,0.6)'; }
+                    else { icon.innerText = '☀️'; text.innerText = 'Día'; text.style.color = 'rgba(232,184,75,0.5)'; }
+                }
+            }
             updateCrises();
             if(timeTick % 180 === 0) checkCrisisGeneration();
             if(timeTick % 60 === 0)  updateHeroes();
@@ -3316,7 +3473,7 @@
             // Reaparición del ecosistema (Repoblación forzada si son cazados)
             if (timeTick % 120 === 0) {
                 let attemptsA = 0;
-                while (animals.length < 80 && attemptsA < 100) { 
+                while (animals.length < 100 && attemptsA < 100) { 
                     let tx = Math.floor(Math.random()*cols); let ty = Math.floor(Math.random()*rows); 
                     if ((grid[tx][ty].type === TERRAIN.GRASS || grid[tx][ty].type === TERRAIN.FOREST) && !grid[tx][ty].hasHouse) animals.push(new Animal(tx, ty));
                     attemptsA++;
@@ -4023,30 +4180,61 @@
                     ctx.fillStyle = '#BDBDBD'; ctx.fillRect(-5, 2+bob, 2, 5); ctx.fillRect(-1, 2+bob, 2, 5); ctx.fillRect(3, 2+bob, 2, 5);
                     // Wool body
                     ctx.fillStyle = '#ECEFF1'; ctx.beginPath(); ctx.ellipse(0, bob, 7, 5, 0, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = '#F5F5F5'; ctx.beginPath(); ctx.ellipse(-2, bob-1, 4, 3, 0, 0, Math.PI*2); ctx.fill(); // fluffy top
+                    ctx.fillStyle = '#F5F5F5'; ctx.beginPath(); ctx.ellipse(-2, bob-1, 4, 3, 0, 0, Math.PI*2); ctx.fill();
                     ctx.beginPath(); ctx.ellipse(3, bob, 3, 3, 0, 0, Math.PI*2); ctx.fill();
                     // Head
                     ctx.fillStyle = '#BDBDBD'; ctx.beginPath(); ctx.ellipse(7, bob-1, 3, 3, 0, 0, Math.PI*2); ctx.fill();
-                    // Eye
                     ctx.fillStyle = '#212121'; ctx.beginPath(); ctx.arc(8, bob-2, 0.8, 0, Math.PI*2); ctx.fill();
-                    // Ear
                     ctx.fillStyle = '#EF9A9A'; ctx.beginPath(); ctx.ellipse(7, bob-3, 1.5, 1, 0, 0, Math.PI*2); ctx.fill();
-                } else { 
-                    // Cow
+                } else if (a.type === 'cow') {
                     ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.beginPath(); ctx.ellipse(0, 6+bob, 9, 2, 0, 0, Math.PI*2); ctx.fill();
-                    // Legs
                     ctx.fillStyle = '#795548'; ctx.fillRect(-6, 3+bob, 2, 5); ctx.fillRect(-2, 3+bob, 2, 5); ctx.fillRect(3, 3+bob, 2, 5); ctx.fillRect(7, 3+bob, 2, 5);
-                    // Body
                     ctx.fillStyle = '#8D6E63'; ctx.beginPath(); ctx.ellipse(0, bob, 9, 6, 0, 0, Math.PI*2); ctx.fill();
-                    // White patches
                     ctx.fillStyle = '#ECEFF1'; ctx.beginPath(); ctx.ellipse(-2, bob-1, 4, 3, 0.3, 0, Math.PI*2); ctx.fill();
                     ctx.beginPath(); ctx.ellipse(5, bob+1, 3, 2, -0.2, 0, Math.PI*2); ctx.fill();
-                    // Head
                     ctx.fillStyle = '#795548'; ctx.beginPath(); ctx.ellipse(10, bob-1, 4, 3, 0, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = '#EFEBE9'; ctx.beginPath(); ctx.ellipse(11, bob, 2.5, 2, 0, 0, Math.PI*2); ctx.fill(); // muzzle
-                    ctx.fillStyle = '#212121'; ctx.beginPath(); ctx.arc(11, bob-2, 0.8, 0, Math.PI*2); ctx.fill(); // eye
-                    // Horns
+                    ctx.fillStyle = '#EFEBE9'; ctx.beginPath(); ctx.ellipse(11, bob, 2.5, 2, 0, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#212121'; ctx.beginPath(); ctx.arc(11, bob-2, 0.8, 0, Math.PI*2); ctx.fill();
                     ctx.fillStyle = '#F9A825'; ctx.fillRect(9, bob-4, 2, 2); ctx.fillRect(12, bob-4, 2, 2);
+                } else if (a.type === 'chicken') {
+                    // Chicken
+                    let peck = a.state === 'idle' && Math.sin(a.animTimer*0.1) > 0.7;
+                    ctx.fillStyle = 'rgba(0,0,0,0.15)'; ctx.beginPath(); ctx.ellipse(0, 4+bob, 5, 1.5, 0, 0, Math.PI*2); ctx.fill();
+                    // Legs
+                    ctx.fillStyle = '#FF9800'; ctx.fillRect(-2, 3+bob, 1, 4); ctx.fillRect(2, 3+bob, 1, 4);
+                    // Body
+                    ctx.fillStyle = '#FFF8E1'; ctx.beginPath(); ctx.ellipse(0, bob, 5, 4, 0, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.ellipse(-1, bob-1, 3, 2.5, 0, 0, Math.PI*2); ctx.fill();
+                    // Head
+                    ctx.fillStyle = '#FFF8E1'; ctx.beginPath(); ctx.ellipse(4, bob-3, 2.5, 2.5, 0, 0, Math.PI*2); ctx.fill();
+                    // Beak
+                    ctx.fillStyle = '#FF9800'; ctx.beginPath(); ctx.moveTo(6, bob-3); ctx.lineTo(8, bob-2.5); ctx.lineTo(6, bob-2); ctx.fill();
+                    // Eye
+                    ctx.fillStyle = '#212121'; ctx.beginPath(); ctx.arc(5, bob-3.5, 0.6, 0, Math.PI*2); ctx.fill();
+                    // Comb
+                    ctx.fillStyle = '#E53935'; ctx.fillRect(3.5, bob-6, 1.5, 2); ctx.fillRect(4.5, bob-6.5, 1.5, 2);
+                    // Wing
+                    ctx.fillStyle = '#F5F5DC'; ctx.beginPath(); ctx.ellipse(-2, bob+1, 2.5, 1.5, -0.3, 0, Math.PI*2); ctx.fill();
+                    if(peck) { ctx.save(); ctx.translate(4, bob-1); ctx.rotate(0.4); ctx.fillStyle = '#FFF8E1'; ctx.fillRect(-1,0,3,2); ctx.restore(); }
+                } else {
+                    // Pig
+                    ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.beginPath(); ctx.ellipse(0, 5+bob, 6, 2, 0, 0, Math.PI*2); ctx.fill();
+                    // Legs (short)
+                    ctx.fillStyle = '#F48FB1'; ctx.fillRect(-4, 4+bob, 2, 3); ctx.fillRect(2, 4+bob, 2, 3);
+                    // Body (round)
+                    ctx.fillStyle = '#F8BBD0'; ctx.beginPath(); ctx.ellipse(0, bob+1, 7, 5, 0, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#F48FB1'; ctx.beginPath(); ctx.ellipse(-1, bob, 5, 3.5, 0, 0, Math.PI*2); ctx.fill();
+                    // Head
+                    ctx.fillStyle = '#F8BBD0'; ctx.beginPath(); ctx.ellipse(5, bob-1, 3.5, 3, 0, 0, Math.PI*2); ctx.fill();
+                    // Snout
+                    ctx.fillStyle = '#F48FB1'; ctx.beginPath(); ctx.ellipse(7, bob-0.5, 2, 1.5, 0, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#EC407A'; ctx.beginPath(); ctx.arc(6.5, bob-0.5, 0.5, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(7.5, bob-0.5, 0.5, 0, Math.PI*2); ctx.fill();
+                    // Eye
+                    ctx.fillStyle = '#212121'; ctx.beginPath(); ctx.arc(6, bob-2, 0.6, 0, Math.PI*2); ctx.fill();
+                    // Ear
+                    ctx.fillStyle = '#F48FB1'; ctx.beginPath(); ctx.ellipse(4, bob-3.5, 1.5, 1, 0.3, 0, Math.PI*2); ctx.fill();
+                    // Tail (curly)
+                    ctx.strokeStyle = '#F48FB1'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(-7, bob, 2, 0, Math.PI*1.5); ctx.stroke();
                 }
                 ctx.restore();
             }
@@ -4484,6 +4672,9 @@
                 ctx.fillText((climateIcons[currentClimate]||'') + ' ' + currentClimate.toUpperCase(), 12, H - 50);
             }
 
+            // Dibujar partículas de clima
+            drawWeatherParticles();
+
             let gradient = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.height/3, canvas.width/2, canvas.height/2, canvas.width);
             gradient.addColorStop(0, 'rgba(0,0,0,0)'); gradient.addColorStop(1, 'rgba(0,0,0,0.8)');
             ctx.fillStyle = gradient; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -4522,12 +4713,36 @@
             camX = -((targetGridX * TILE_SIZE) - (canvas.width / zoom / 2)) * zoom; camY = -((targetGridY * TILE_SIZE) - (canvas.height / zoom / 2)) * zoom;
         }
 
+        // Sistema de día/noche
+        let dayNightCycle = 0;
+        let dayNightDuration = 3600; // 1 minuto = ciclo completo
+
+        function getDayNightOverlay() {
+            let cycle = (timeTick % dayNightDuration) / dayNightDuration;
+            let phase = Math.sin(cycle * Math.PI * 2); // -1 a 1
+            // phase > 0 = día, phase < 0 = noche
+            let darkness = Math.max(0, -phase * 0.15); // máximo 0.15 de oscuridad
+            let warmth = Math.max(0, phase * 0.05); // tinte cálido en día
+            return { darkness, warmth, isNight: phase < -0.3 };
+        }
+
         function mainLoop() {
             if(simSettings.speed > 0 && simSettings.speed < 1) {
                 frameCounter += simSettings.speed;
                 if(frameCounter >= 1) { updateLogic(); frameCounter -= 1; }
             } else { for(let i=0; i<simSettings.speed; i++) updateLogic(); }
-            drawWorld(); requestAnimationFrame(mainLoop);
+            drawWorld();
+            // Aplicar overlay de día/noche
+            let dn = getDayNightOverlay();
+            if(dn.darkness > 0) {
+                ctx.fillStyle = `rgba(10,15,40,${dn.darkness})`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            if(dn.warmth > 0) {
+                ctx.fillStyle = `rgba(255,200,100,${dn.warmth})`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            requestAnimationFrame(mainLoop);
         }
 
         function applyPower(tx, ty) {
@@ -4550,10 +4765,24 @@
                 else if(id === 'SMITE') {
                     let r = brushRadius;
                     let hit = false;
+                    // Rayo principal
+                    spawnParticles(tx, ty, '#FFD700', 30, 50, 'circle');
+                    spawnParticles(tx, ty, '#FFFFFF', 15, 40, 'star');
+                    // Ondas de choque
+                    for(let wave=0; wave<3; wave++) {
+                        setTimeout(() => {
+                            for(let angle=0; angle<360; angle+=20) {
+                                let rad = (wave+1) * 3;
+                                let px = tx + Math.cos(angle*Math.PI/180) * rad;
+                                let py = ty + Math.sin(angle*Math.PI/180) * rad;
+                                spawnParticles(px, py, '#FF6F00', 2, 25, 'circle');
+                            }
+                        }, wave * 100);
+                    }
                     for(let i = -r; i <= r; i++) { for(let j = -r; j <= r; j++) { 
                         if(tx+i>=0 && tx+i<cols && ty+j>=0 && ty+j<rows) { 
                             grid[tx+i][ty+j].type = TERRAIN.FIRE; grid[tx+i][ty+j].hasHouse = false; 
-                            if(Math.random() < 0.3) spawnParticles(tx+i, ty+j, '#fbc531', 2, 40);
+                            if(Math.random() < 0.5) spawnParticles(tx+i, ty+j, '#fbc531', 3, 45, 'circle');
                             hit = true;
                         } 
                     }}
@@ -4565,10 +4794,21 @@
                     let r = brushRadius;
                     let targets = new Set();
                     let blessedHumans = 0;
+                    // Efecto visual mejorado - anillos de luz
+                    for(let ring=0; ring<3; ring++) {
+                        setTimeout(() => {
+                            for(let angle=0; angle<360; angle+=15) {
+                                let rad = (ring+1) * 2.5;
+                                let px = tx + Math.cos(angle*Math.PI/180) * rad;
+                                let py = ty + Math.sin(angle*Math.PI/180) * rad;
+                                spawnParticles(px, py, ring===0?'#fff5cc':(ring===1?'#f1c40f':'#2ecc71'), 1, 30, 'star');
+                            }
+                        }, ring * 200);
+                    }
                     for(let i = -r; i <= r; i++) { for(let j = -r; j <= r; j++) { 
                         if(tx+i>=0 && tx+i<cols && ty+j>=0 && ty+j<rows) {
                             if(grid[tx+i][ty+j].ownerId) targets.add(grid[tx+i][ty+j].ownerId); 
-                            if(Math.random() < 0.3) spawnParticles(tx+i, ty+j, '#2ecc71', 2, 40);
+                            if(Math.random() < 0.5) spawnParticles(tx+i, ty+j, '#2ecc71', 2, 40, 'circle');
                         }
                     }}
                     targets.forEach(vId => {
@@ -4890,6 +5130,7 @@
                 let v = villages.find(vv => vv.id === hoveredHuman.villageId);
                 let vName = v ? `<span style="color:${v.color};font-size:10px;">${v.name} (Edad ${v.age})</span>` : '<span style="color:#888">Sin aldea</span>';
                 let stateNames = {'IDLE':'Descansando','WANDER':'Vagabundeando','GATHER':'Talando','GATHER_IRON':'Minando Hierro','GATHER_GOLD':'Minando Oro','GATHER_FOOD':'Recolectando','BUILD':'Construyendo','FIGHT':'¡En combate!','FLEE':'¡Huyendo!','FISH':'Pescando','TRADE':'Comerciando','HUNT':'Cazando','COLONIZE':'Colonizando','HEAL':'Curando','WANDER':'Patrullando'};
+                let stateEmoji = {'IDLE':'😴','WANDER':'🚶','GATHER':'🪓','GATHER_IRON':'⛏️','GATHER_GOLD':'💛','GATHER_FOOD':'🍓','BUILD':'🔨','FIGHT':'⚔️','FLEE':'💨','FISH':'🎣','TRADE':'💰','HUNT':'🏹','COLONIZE':'🚩','HEAL':'💊','WANDER':'🚶'};
                 let stateName = stateNames[hoveredHuman.state] || hoveredHuman.state;
                 let stateColor = hoveredHuman.state === 'FIGHT' ? '#e74c3c' : (hoveredHuman.state === 'FLEE' ? '#e67e22' : (hoveredHuman.state === 'BUILD' ? '#3498db' : '#2ecc71'));
                 let hpBarW = Math.round((hoveredHuman.hp / hoveredHuman.maxHp) * 60);
