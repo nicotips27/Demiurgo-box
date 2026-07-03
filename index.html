@@ -253,6 +253,33 @@
         }
 
         /* ═══════════════════════════════════════════════
+           ORIENTATION LOCK OVERLAY — MÓVIL
+        ═══════════════════════════════════════════════ */
+        #orientation-overlay {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: #020308;
+            flex-direction: column; align-items: center; justify-content: center;
+            font-family: 'Rajdhani', monospace; color: rgba(232,184,75,0.6);
+            text-align: center; padding: 20px;
+        }
+        #orientation-overlay .or-icon {
+            font-size: 48px; margin-bottom: 16px;
+            animation: orRotate 2s ease-in-out infinite;
+        }
+        @keyframes orRotate {
+            0%,100% { transform: rotate(0deg); }
+            25% { transform: rotate(-15deg); }
+            75% { transform: rotate(90deg); }
+        }
+        #orientation-overlay .or-text {
+            font-size: 14px; letter-spacing: 3px; text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        #orientation-overlay .or-sub {
+            font-size: 11px; color: rgba(232,184,75,0.3); letter-spacing: 2px;
+        }
+
+        /* ═══════════════════════════════════════════════
            MODALS
         ═══════════════════════════════════════════════ */
         .modal {
@@ -758,6 +785,13 @@
     </style>
 </head>
 <body>
+    <!-- Orientation lock overlay for mobile -->
+    <div id="orientation-overlay">
+        <div class="or-icon">📱↻</div>
+        <div class="or-text">Gira tu dispositivo</div>
+        <div class="or-sub">El juego requiere pantalla horizontal</div>
+    </div>
+
     <div id="main-menu">
         <!-- Corner decorations -->
         <div class="menu-corner menu-corner--tl"></div>
@@ -5949,6 +5983,42 @@
             hasActiveGame = false;
             checkSave();
             mainLoop();
+
+            // ═══════════════════════════════════════════════
+            //  ORIENTATION LOCK — Forzar landscape en móvil
+            // ═══════════════════════════════════════════════
+            const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+            const orOverlay = document.getElementById('orientation-overlay');
+
+            function checkOrientation() {
+                if (!isMobile) { orOverlay.style.display = 'none'; return; }
+                const isPortrait = window.innerHeight > window.innerWidth;
+                orOverlay.style.display = isPortrait ? 'flex' : 'none';
+            }
+
+            // Intentar bloquear orientación a landscape
+            function lockLandscape() {
+                const sl = screen.orientation || screen.mozOrientation || screen.msOrientation;
+                if (sl && sl.lock) {
+                    sl.lock('landscape').catch(() => {});
+                }
+            }
+
+            if (isMobile) {
+                checkOrientation();
+                window.addEventListener('resize', checkOrientation);
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(checkOrientation, 100);
+                });
+                // Bloquear en la primera interacción
+                const lockOnFirst = () => {
+                    lockLandscape();
+                    document.removeEventListener('click', lockOnFirst);
+                    document.removeEventListener('touchstart', lockOnFirst);
+                };
+                document.addEventListener('click', lockOnFirst);
+                document.addEventListener('touchstart', lockOnFirst);
+            }
 
             function startMenuMusic() {
                 AudioSystem.init();
