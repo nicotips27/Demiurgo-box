@@ -1008,35 +1008,45 @@
         </div>
     </div>
 
-    <div id="map-selector" class="modal" style="z-index:105;text-align:center;max-width:640px;">
-        <h2 style="margin-bottom:6px;">Elegir Mundo</h2>
-        <p style="color:var(--text-secondary);font-size:11px;margin-bottom:8px;">Elige la forma del mundo y su clima</p>
-        <h3 style="font-family:'Cinzel',serif;font-size:10px;color:var(--text-secondary);letter-spacing:2px;margin-bottom:6px;">— GEOGRAFÍA —</h3>
-        <div class="map-grid" style="grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px;">
-            <div class="map-card" onclick="selectMap('random')"><svg viewBox="0 0 100 70" style="width:100%;height:48px;background:#1B9CFC;"><path d="M10,20 Q30,5 45,30 T70,15 Q90,30 80,50 T40,65 Q15,60 10,40 Z" fill="#2ed573"/><circle cx="85" cy="55" r="6" fill="#2ed573"/></svg><span>🌍 Aleatorio</span></div>
-            <div class="map-card" onclick="selectMap('pangea')"><svg viewBox="0 0 100 70" style="width:100%;height:48px;background:#1B9CFC;"><path d="M25,35 Q30,10 50,15 T75,35 Q85,60 50,60 T25,35 Z" fill="#2ed573" transform="scale(1.2) translate(-8,-5)"/></svg><span>🟢 Pangea</span></div>
-            <div class="map-card" onclick="selectMap('archipelago')"><svg viewBox="0 0 100 70" style="width:100%;height:48px;background:#1B9CFC;"><circle cx="20" cy="20" r="7" fill="#2ed573"/><circle cx="50" cy="15" r="9" fill="#2ed573"/><circle cx="80" cy="25" r="6" fill="#2ed573"/><circle cx="30" cy="50" r="8" fill="#2ed573"/><circle cx="65" cy="50" r="7" fill="#2ed573"/></svg><span>🏝️ Archipiélago</span></div>
-            <div class="map-card" onclick="selectMap('ring')"><svg viewBox="0 0 100 70" style="width:100%;height:48px;background:#1B9CFC;"><circle cx="50" cy="35" r="30" fill="#2ed573"/><circle cx="50" cy="35" r="14" fill="#1B9CFC"/></svg><span>🍩 Anillo</span></div>
-            <div class="map-card" onclick="selectMap('continents')"><svg viewBox="0 0 100 70" style="width:100%;height:48px;background:#1B9CFC;"><path d="M5,10 Q20,5 30,20 T25,50 Q12,58 8,45 Z" fill="#2ed573"/><path d="M38,8 Q58,3 68,20 T63,48 Q50,56 40,48 T35,28 Z" fill="#2ed573"/><path d="M74,12 Q90,8 94,28 T84,50 Q76,54 71,40 Z" fill="#2ed573"/></svg><span>🌎 Continentes</span></div>
-            <div class="map-card" onclick="selectMap('desert')"><svg viewBox="0 0 100 70" style="width:100%;height:48px;background:#c4a35a;"><rect x="0" y="0" width="100" height="70" fill="#e8c97d"/><path d="M0,40 Q25,28 50,44 T100,36" fill="none" stroke="#b8823a" stroke-width="3"/></svg><span>🏜️ Desierto</span></div>
-            <div class="map-card" onclick="selectMap('volcanic')"><svg viewBox="0 0 100 70" style="width:100%;height:48px;background:#2d1b00;"><path d="M10,65 Q30,8 50,65 Z" fill="#555"/><path d="M40,65 Q58,12 75,65 Z" fill="#666"/><circle cx="50" cy="18" r="5" fill="#ff4500"/></svg><span>🌋 Volcánico</span></div>
-            <div class="map-card" onclick="selectMap('frozen')"><svg viewBox="0 0 100 70" style="width:100%;height:48px;background:#c8dff0;"><rect x="0" y="0" width="100" height="70" fill="#ddeef8"/><path d="M5,35 Q25,20 50,35 T95,30" fill="#8ab8d8" opacity="0.7"/><text x="50" y="55" text-anchor="middle" font-size="22" fill="white">❄</text></svg><span>❄️ Tundra</span></div>
+    <div id="map-selector" class="modal" style="z-index:105;text-align:center;max-width:680px;">
+        <div style="position:relative;margin-bottom:8px;">
+            <h2 style="margin-bottom:2px;letter-spacing:4px;font-size:16px;">ELEGIR MUNDO</h2>
+            <p style="color:var(--text-secondary);font-size:10px;margin-bottom:0;letter-spacing:1px;">CONFIGURA GEOGRAFÍA Y CLIMA ANTES DE CREAR</p>
         </div>
-        <h3 style="font-family:'Cinzel',serif;font-size:10px;color:var(--text-secondary);letter-spacing:2px;margin-bottom:6px;">— CLIMA —</h3>
-        <div class="map-grid" style="grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:8px;">
-            <div class="map-card climate-card" id="climate-temperate" onclick="selectClimate('temperate')" style="border-color:#2ed573"><svg viewBox="0 0 80 60" style="width:100%;height:44px;background:#87CEEB;"><circle cx="40" cy="18" r="10" fill="#FFD700"/><path d="M10,44 Q40,30 70,44" fill="#2ed573"/></svg><span>🌤️ Templado</span></div>
-            <div class="map-card climate-card" id="climate-tropical" onclick="selectClimate('tropical')"><svg viewBox="0 0 80 60" style="width:100%;height:44px;background:#3a8f30;"><circle cx="40" cy="12" r="9" fill="#FFD700"/><path d="M22,20 Q30,15 26,38" fill="#228B22"/><path d="M50,16 Q58,11 54,35" fill="#228B22"/></svg><span>🌴 Tropical</span></div>
-            <div class="map-card climate-card" id="climate-arid" onclick="selectClimate('arid')"><svg viewBox="0 0 80 60" style="width:100%;height:44px;background:#e8c97d;"><circle cx="40" cy="14" r="14" fill="#FF8C00"/></svg><span>☀️ Árido</span></div>
-            <div class="map-card climate-card" id="climate-cold" onclick="selectClimate('cold')"><svg viewBox="0 0 80 60" style="width:100%;height:44px;background:#b8d4f0;"><circle cx="20" cy="14" r="7" fill="white" opacity="0.9"/><circle cx="45" cy="9" r="9" fill="white"/><text x="40" y="50" text-anchor="middle" font-size="20">❄</text></svg><span>🌨️ Frío</span></div>
-            <div class="map-card climate-card" id="climate-stormy" onclick="selectClimate('stormy')"><svg viewBox="0 0 80 60" style="width:100%;height:44px;background:#2c3e50;"><circle cx="30" cy="16" r="10" fill="#607D8B"/><circle cx="52" cy="13" r="8" fill="#546E7A"/><polygon points="40,27 35,42 43,42 36,55 50,37 42,37 48,27" fill="#FFD700"/></svg><span>⛈️ Tormenta</span></div>
-            <div class="map-card climate-card" id="climate-volcanic_climate" onclick="selectClimate('volcanic_climate')"><svg viewBox="0 0 80 60" style="width:100%;height:44px;background:#1a0a00;"><path d="M5,55 Q40,15 75,55" fill="#8B0000" opacity="0.6"/><circle cx="40" cy="18" r="7" fill="#FF4500" opacity="0.85"/></svg><span>🔥 Volcánico</span></div>
-            <div class="map-card climate-card" id="climate-plague" onclick="selectClimate('plague')"><svg viewBox="0 0 80 60" style="width:100%;height:44px;background:#1a2a1a;"><circle cx="20" cy="18" r="9" fill="#2d5a1b" opacity="0.8"/><circle cx="50" cy="13" r="11" fill="#3d7a2b" opacity="0.7"/><text x="40" y="50" text-anchor="middle" font-size="17">☣</text></svg><span>☣️ Plaga</span></div>
-            <div class="map-card climate-card" id="climate-blessed" onclick="selectClimate('blessed')"><svg viewBox="0 0 80 60" style="width:100%;height:44px;background:#fffde7;"><circle cx="40" cy="18" r="13" fill="#FFD700" opacity="0.9"/><path d="M10,46 Q40,32 70,46" fill="#4CAF50"/></svg><span>✨ Bendecido</span></div>
+        <div style="display:flex;gap:16px;margin-bottom:10px;">
+            <div style="flex:1;">
+                <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--gold);letter-spacing:3px;margin-bottom:6px;text-transform:uppercase;text-align:left;border-bottom:1px solid rgba(232,184,75,0.2);padding-bottom:3px;">▸ GEOGRAFÍA</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;" id="map-grid-cards">
+                    <div class="map-card" onclick="selectMap('random')" style="padding:6px 4px;position:relative;"><svg viewBox="0 0 100 70" style="width:100%;height:36px;"><rect width="100" height="70" fill="#0a1828"/><path d="M10,25 Q30,8 50,28 T85,18 Q95,35 80,52 T40,60 Q12,55 10,38Z" fill="#2ed573" opacity="0.7"/><circle cx="82" cy="52" r="5" fill="#2ed573" opacity="0.6"/></svg><span style="font-size:9px;">Aleatorio</span></div>
+                    <div class="map-card" onclick="selectMap('pangea')" style="padding:6px 4px;"><svg viewBox="0 0 100 70" style="width:100%;height:36px;"><rect width="100" height="70" fill="#0a1828"/><path d="M20,32 Q30,8 55,14 T80,32 Q90,58 50,60 T20,42Z" fill="#2ed573" opacity="0.7"/></svg><span style="font-size:9px;">Pangea</span></div>
+                    <div class="map-card" onclick="selectMap('archipelago')" style="padding:6px 4px;"><svg viewBox="0 0 100 70" style="width:100%;height:36px;"><rect width="100" height="70" fill="#0a1828"/><circle cx="18" cy="18" r="6" fill="#2ed573" opacity="0.7"/><circle cx="48" cy="14" r="8" fill="#2ed573" opacity="0.7"/><circle cx="78" cy="22" r="5" fill="#2ed573" opacity="0.7"/><circle cx="28" cy="48" r="7" fill="#2ed573" opacity="0.7"/><circle cx="62" cy="50" r="6" fill="#2ed573" opacity="0.7"/></svg><span style="font-size:9px;">Archipiélago</span></div>
+                    <div class="map-card" onclick="selectMap('ring')" style="padding:6px 4px;"><svg viewBox="0 0 100 70" style="width:100%;height:36px;"><rect width="100" height="70" fill="#0a1828"/><circle cx="50" cy="35" r="28" fill="#2ed573" opacity="0.7"/><circle cx="50" cy="35" r="12" fill="#0a1828"/></svg><span style="font-size:9px;">Anillo</span></div>
+                    <div class="map-card" onclick="selectMap('continents')" style="padding:6px 4px;"><svg viewBox="0 0 100 70" style="width:100%;height:36px;"><rect width="100" height="70" fill="#0a1828"/><path d="M4,10 Q18,4 28,18 T22,48 Q10,54 6,42Z" fill="#2ed573" opacity="0.7"/><path d="M36,6 Q54,2 64,18 T60,46 Q48,52 38,44 T32,26Z" fill="#2ed573" opacity="0.7"/><path d="M72,10 Q88,6 92,26 T82,48 Q74,52 69,38Z" fill="#2ed573" opacity="0.7"/></svg><span style="font-size:9px;">Continentes</span></div>
+                    <div class="map-card" onclick="selectMap('desert')" style="padding:6px 4px;"><svg viewBox="0 0 100 70" style="width:100%;height:36px;"><rect width="100" height="70" fill="#3d2b10"/><rect x="0" y="0" width="100" height="70" fill="#e8c97d" opacity="0.5"/><path d="M0,42 Q25,30 50,46 T100,38" fill="none" stroke="#b8823a" stroke-width="2"/></svg><span style="font-size:9px;">Desierto</span></div>
+                    <div class="map-card" onclick="selectMap('volcanic')" style="padding:6px 4px;"><svg viewBox="0 0 100 70" style="width:100%;height:36px;"><rect width="100" height="70" fill="#1a0a00"/><path d="M10,62 Q28,6 50,62Z" fill="#444"/><path d="M38,62 Q56,8 72,62Z" fill="#555"/><circle cx="50" cy="16" r="4" fill="#ff4500" opacity="0.8"/></svg><span style="font-size:9px;">Volcánico</span></div>
+                    <div class="map-card" onclick="selectMap('frozen')" style="padding:6px 4px;"><svg viewBox="0 0 100 70" style="width:100%;height:36px;"><rect width="100" height="70" fill="#1a2a3a"/><rect x="0" y="0" width="100" height="70" fill="#ddeef8" opacity="0.4"/><path d="M5,35 Q25,20 50,35 T95,30" fill="#8ab8d8" opacity="0.5"/><text x="50" y="52" text-anchor="middle" font-size="18" fill="white" opacity="0.8">❄</text></svg><span style="font-size:9px;">Tundra</span></div>
+                </div>
+                <div id="map-desc" style="margin-top:6px;padding:5px 8px;background:rgba(232,184,75,0.06);border:1px solid rgba(232,184,75,0.12);border-radius:3px;font-size:10px;color:var(--text-secondary);min-height:22px;text-align:left;line-height:1.4;">Selecciona una geografía</div>
+            </div>
+            <div style="width:1px;background:rgba(232,184,75,0.15);align-self:stretch;"></div>
+            <div style="flex:1;">
+                <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--gold);letter-spacing:3px;margin-bottom:6px;text-transform:uppercase;text-align:left;border-bottom:1px solid rgba(232,184,75,0.2);padding-bottom:3px;">▸ CLIMA</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;">
+                    <div class="map-card climate-card" id="climate-temperate" onclick="selectClimate('temperate')" style="padding:6px 4px;border-color:#2ed573;"><svg viewBox="0 0 80 50" style="width:100%;height:32px;"><rect width="80" height="50" fill="#87CEEB" opacity="0.4"/><circle cx="40" cy="14" r="8" fill="#FFD700" opacity="0.8"/><path d="M8,36 Q40,24 72,36" fill="#2ed573" opacity="0.6"/></svg><span style="font-size:8px;">Templado</span></div>
+                    <div class="map-card climate-card" id="climate-tropical" onclick="selectClimate('tropical')" style="padding:6px 4px;"><svg viewBox="0 0 80 50" style="width:100%;height:32px;"><rect width="80" height="50" fill="#1a4a1a" opacity="0.5"/><circle cx="40" cy="10" r="7" fill="#FFD700" opacity="0.7"/><path d="M18,18 Q26,13 22,34" fill="#228B22" opacity="0.7"/><path d="M48,14 Q56,9 52,30" fill="#228B22" opacity="0.7"/></svg><span style="font-size:8px;">Tropical</span></div>
+                    <div class="map-card climate-card" id="climate-arid" onclick="selectClimate('arid')" style="padding:6px 4px;"><svg viewBox="0 0 80 50" style="width:100%;height:32px;"><rect width="80" height="50" fill="#e8c97d" opacity="0.4"/><circle cx="40" cy="12" r="12" fill="#FF8C00" opacity="0.7"/></svg><span style="font-size:8px;">Árido</span></div>
+                    <div class="map-card climate-card" id="climate-cold" onclick="selectClimate('cold')" style="padding:6px 4px;"><svg viewBox="0 0 80 50" style="width:100%;height:32px;"><rect width="80" height="50" fill="#b8d4f0" opacity="0.4"/><circle cx="22" cy="12" r="6" fill="white" opacity="0.7"/><circle cx="48" cy="8" r="8" fill="white" opacity="0.6"/><text x="40" y="42" text-anchor="middle" font-size="16">❄</text></svg><span style="font-size:8px;">Frío</span></div>
+                    <div class="map-card climate-card" id="climate-stormy" onclick="selectClimate('stormy')" style="padding:6px 4px;"><svg viewBox="0 0 80 50" style="width:100%;height:32px;"><rect width="80" height="50" fill="#1a2530" opacity="0.6"/><circle cx="28" cy="14" r="8" fill="#607D8B" opacity="0.5"/><circle cx="52" cy="10" r="7" fill="#546E7A" opacity="0.5"/><polygon points="40,22 36,34 44,34 38,44 50,30 42,30 46,22" fill="#FFD700" opacity="0.7"/></svg><span style="font-size:8px;">Tormenta</span></div>
+                    <div class="map-card climate-card" id="climate-volcanic_climate" onclick="selectClimate('volcanic_climate')" style="padding:6px 4px;"><svg viewBox="0 0 80 50" style="width:100%;height:32px;"><rect width="80" height="50" fill="#1a0500" opacity="0.6"/><path d="M5,46 Q40,10 75,46" fill="#8B0000" opacity="0.4"/><circle cx="40" cy="14" r="6" fill="#FF4500" opacity="0.7"/></svg><span style="font-size:8px;">Volcánico</span></div>
+                    <div class="map-card climate-card" id="climate-plague" onclick="selectClimate('plague')" style="padding:6px 4px;"><svg viewBox="0 0 80 50" style="width:100%;height:32px;"><rect width="80" height="50" fill="#0a1a0a" opacity="0.5"/><circle cx="20" cy="16" r="7" fill="#2d5a1b" opacity="0.6"/><circle cx="50" cy="12" r="9" fill="#3d7a2b" opacity="0.5"/><text x="40" y="42" text-anchor="middle" font-size="14">☣</text></svg><span style="font-size:8px;">Plaga</span></div>
+                    <div class="map-card climate-card" id="climate-blessed" onclick="selectClimate('blessed')" style="padding:6px 4px;"><svg viewBox="0 0 80 50" style="width:100%;height:32px;"><rect width="80" height="50" fill="#1a1808" opacity="0.4"/><circle cx="40" cy="14" r="11" fill="#FFD700" opacity="0.6"/><path d="M8,38 Q40,26 72,38" fill="#4CAF50" opacity="0.5"/></svg><span style="font-size:8px;">Bendecido</span></div>
+                </div>
+                <div style="padding:5px 8px;background:rgba(255,255,255,0.04);border-radius:3px;font-size:10px;color:var(--text-secondary);min-height:22px;margin-top:6px;text-align:left;line-height:1.4;" id="climate-desc">Selecciona un clima</div>
+            </div>
         </div>
-        <div style="padding:7px 10px;background:rgba(255,255,255,0.05);border-radius:4px;font-size:11px;color:var(--text-secondary);min-height:26px;margin-bottom:10px;" id="climate-desc">Selecciona un clima para ver sus efectos</div>
-        <div style="display:flex;gap:10px;justify-content:center;">
-            <button class="menu-btn" style="margin:0;padding:9px 24px;font-size:13px;" onclick="launchGame()">⬡ Crear Mundo</button>
-            <button class="close-btn" style="float:none;margin:0;" onclick="closeModal('map-selector');selectedMapType=null;selectedClimate=null;">Volver</button>
+        <div style="display:flex;gap:10px;justify-content:center;align-items:center;border-top:1px solid rgba(232,184,75,0.15);padding-top:10px;">
+            <button class="menu-btn" style="margin:0;padding:10px 32px;font-size:14px;letter-spacing:2px;min-width:180px;" onclick="launchGame()">⬡ CREAR MUNDO</button>
+            <button class="close-btn" style="float:none;margin:0;padding:10px 20px;" onclick="closeModal('map-selector');selectedMapType=null;selectedClimate=null;">Volver</button>
         </div>
     </div>
 
@@ -1743,24 +1753,100 @@
 
         // ═══════════════════════════════════════════════
         //  TERRAIN TEXTURES — from Stunt Rally 2.3 (CC0)
+        //  Climate-aware texture system
         // ═══════════════════════════════════════════════
         const terrainTextures = {};
-        const textureFiles = {
-            [TERRAIN.WATER]: 'textures/water.jpg',
-            [TERRAIN.SAND]:  'textures/sand.jpg',
-            [TERRAIN.GRASS]: 'textures/grass.jpg',
-            [TERRAIN.FOREST]:'textures/forest.jpg',
-            [TERRAIN.FIRE]:  'textures/fire.jpg',
-            [TERRAIN.IRON]:  'textures/iron.jpg',
-            [TERRAIN.GOLD]:  'textures/gold.jpg'
-        };
         let texturesLoaded = 0;
         let texturesReady = false;
 
-        function loadTerrainTextures() {
-            const total = Object.keys(textureFiles).length;
+        // Each climate maps TERRAIN types to specific textures
+        const CLIMATE_TEXTURES = {
+            temperate: {
+                [TERRAIN.WATER]: 'textures/desert_wet_d.jpg',
+                [TERRAIN.SAND]:  'textures/desert_sand_d.jpg',
+                [TERRAIN.GRASS]: 'textures/grass_green_d.jpg',
+                [TERRAIN.FOREST]:'textures/ground_leaves_d.jpg',
+                [TERRAIN.FIRE]:  'textures/lava2_d.jpg',
+                [TERRAIN.IRON]:  'textures/ground_crackedo_d.jpg',
+                [TERRAIN.GOLD]:  'textures/desert_sand_big_d.jpg'
+            },
+            tropical: {
+                [TERRAIN.WATER]: 'textures/desert_wet_d.jpg',
+                [TERRAIN.SAND]:  'textures/island_sand_d.jpg',
+                [TERRAIN.GRASS]: 'textures/savanna_green_d.jpg',
+                [TERRAIN.FOREST]:'textures/jungle_stone_d.jpg',
+                [TERRAIN.FIRE]:  'textures/lava_d.jpg',
+                [TERRAIN.IRON]:  'textures/jungle_mntnx_d.jpg',
+                [TERRAIN.GOLD]:  'textures/desert_sand2_d.jpg'
+            },
+            arid: {
+                [TERRAIN.WATER]: 'textures/desert_mud_d.jpg',
+                [TERRAIN.SAND]:  'textures/desert_sand_bigx_d.jpg',
+                [TERRAIN.GRASS]: 'textures/desert_sand2_d.jpg',
+                [TERRAIN.FOREST]:'textures/ground_dry_d.jpg',
+                [TERRAIN.FIRE]:  'textures/lava_black_d.jpg',
+                [TERRAIN.IRON]:  'textures/desert_rocky_d.jpg',
+                [TERRAIN.GOLD]:  'textures/desert_cracks_d.jpg'
+            },
+            cold: {
+                [TERRAIN.WATER]: 'textures/snow2ice_d.jpg',
+                [TERRAIN.SAND]:  'textures/snow2_d.jpg',
+                [TERRAIN.GRASS]: 'textures/snow_grass_d.jpg',
+                [TERRAIN.FOREST]:'textures/mntn_forest_d.jpg',
+                [TERRAIN.FIRE]:  'textures/lava_mars_d.jpg',
+                [TERRAIN.IRON]:  'textures/mntn_gray_d.jpg',
+                [TERRAIN.GOLD]:  'textures/mntn_yellow_d.jpg'
+            },
+            volcanic_climate: {
+                [TERRAIN.WATER]: 'textures/lava_d.jpg',
+                [TERRAIN.SAND]:  'textures/mntn_brown_d.jpg',
+                [TERRAIN.GRASS]: 'textures/mntn_dark_d.jpg',
+                [TERRAIN.FOREST]:'textures/mntn_canyon_d.jpg',
+                [TERRAIN.FIRE]:  'textures/lava_black_d.jpg',
+                [TERRAIN.IRON]:  'textures/mntn_black_d.jpg',
+                [TERRAIN.GOLD]:  'textures/mntn_canyon2o_d.jpg'
+            },
+            stormy: {
+                [TERRAIN.WATER]: 'textures/desert_mud_d.jpg',
+                [TERRAIN.SAND]:  'textures/ground_crackedv_d.jpg',
+                [TERRAIN.GRASS]: 'textures/mntn_darkx_d.jpg',
+                [TERRAIN.FOREST]:'textures/ground_mud_d.jpg',
+                [TERRAIN.FIRE]:  'textures/lava_d.jpg',
+                [TERRAIN.IRON]:  'textures/mntn_canyon_d.jpg',
+                [TERRAIN.GOLD]:  'textures/ground_yellow_d.jpg'
+            },
+            plague: {
+                [TERRAIN.WATER]: 'textures/desert_mud_d.jpg',
+                [TERRAIN.SAND]:  'textures/ground_mud2_d.jpg',
+                [TERRAIN.GRASS]: 'textures/moss_ground_d.jpg',
+                [TERRAIN.FOREST]:'textures/moss_plants_d.jpg',
+                [TERRAIN.FIRE]:  'textures/lava_black_d.jpg',
+                [TERRAIN.IRON]:  'textures/amntn_dark_d.jpg',
+                [TERRAIN.GOLD]:  'textures/ground_dry_d.jpg'
+            },
+            blessed: {
+                [TERRAIN.WATER]: 'textures/desert_wet_d.jpg',
+                [TERRAIN.SAND]:  'textures/island_sand2_d.jpg',
+                [TERRAIN.GRASS]: 'textures/grass_green2y_d.jpg',
+                [TERRAIN.FOREST]:'textures/ground_ferns_d.jpg',
+                [TERRAIN.FIRE]:  'textures/lava2_d.jpg',
+                [TERRAIN.IRON]:  'textures/mntn_green_d.jpg',
+                [TERRAIN.GOLD]:  'textures/ground_white_d.jpg'
+            }
+        };
+
+        function getTextureMap(climate) {
+            return CLIMATE_TEXTURES[climate] || CLIMATE_TEXTURES['temperate'];
+        }
+
+        function loadTerrainTextures(climate) {
+            climate = climate || 'temperate';
+            const files = getTextureMap(climate);
+            const total = Object.keys(files).length;
+            texturesLoaded = 0;
+            texturesReady = false;
             if (total === 0) { texturesReady = true; return; }
-            for (const [type, src] of Object.entries(textureFiles)) {
+            for (const [type, src] of Object.entries(files)) {
                 const img = new Image();
                 img.onload = () => {
                     texturesLoaded++;
@@ -1774,7 +1860,145 @@
                 terrainTextures[type] = img;
             }
         }
-        loadTerrainTextures();
+        loadTerrainTextures('temperate');
+
+        // ═══════════════════════════════════════════════
+        //  TREE SPRITES — CC0 from OpenGameArt.org
+        //  Climate-aware tinted variants
+        // ═══════════════════════════════════════════════
+        const treeSprites = {};
+        let treeSpritesReady = false;
+
+        function tintImage(img, r, g, b, desaturate) {
+            const c = document.createElement('canvas');
+            c.width = img.naturalWidth; c.height = img.naturalHeight;
+            const cx = c.getContext('2d');
+            cx.drawImage(img, 0, 0);
+            const id = cx.getImageData(0, 0, c.width, c.height);
+            const d = id.data;
+            for (let i = 0; i < d.length; i += 4) {
+                if (d[i+3] > 0) {
+                    if (desaturate) {
+                        const gray = Math.round(d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114);
+                        d[i] = Math.min(255, Math.round(gray * (r/255)));
+                        d[i+1] = Math.min(255, Math.round(gray * (g/255)));
+                        d[i+2] = Math.min(255, Math.round(gray * (b/255)));
+                    } else {
+                        d[i] = Math.min(255, Math.round(d[i] * (r/255)));
+                        d[i+1] = Math.min(255, Math.round(d[i+1] * (g/255)));
+                        d[i+2] = Math.min(255, Math.round(d[i+2] * (b/255)));
+                    }
+                }
+            }
+            cx.putImageData(id, 0, 0);
+            return c;
+        }
+
+        const TREE_CLIMATE_TINTS = {
+            temperate:  { light: [100, 240, 100], dark: [50, 160, 50], desat: false },
+            tropical:   { light: [70, 200, 70], dark: [30, 120, 30], desat: false },
+            arid:       { light: [220, 200, 120], dark: [160, 140, 70], desat: false },
+            cold:       { light: [240, 248, 255], dark: [200, 220, 240], desat: true },
+            volcanic_climate: { light: [200, 140, 80], dark: [140, 90, 50], desat: false },
+            stormy:     { light: [140, 160, 140], dark: [80, 100, 80], desat: false },
+            plague:     { light: [120, 150, 90], dark: [70, 100, 60], desat: false },
+            blessed:    { light: [120, 255, 120], dark: [60, 180, 60], desat: false }
+        };
+
+        function loadTreeSprites() {
+            treeSpritesReady = false;
+            const img1 = new Image();
+            const img2 = new Image();
+            let imagesLoaded = 0;
+
+            function checkReady() {
+                imagesLoaded++;
+                if (imagesLoaded < 2) return;
+                for (const [climate, tints] of Object.entries(TREE_CLIMATE_TINTS)) {
+                    treeSprites[climate] = {
+                        light: tintImage(img1, ...tints.light, tints.desat),
+                        dark: tintImage(img2, ...tints.dark, tints.desat)
+                    };
+                }
+                treeSpritesReady = true;
+            }
+
+            img1.onload = img2.onload = checkReady;
+            img1.onerror = img2.onerror = function() {
+                imagesLoaded++;
+                if (imagesLoaded >= 2) treeSpritesReady = true;
+            };
+            img1.src = 'tree_green.png';
+            img2.src = 'tree_dark_green.png';
+        }
+        loadTreeSprites();
+
+        // ═══════════════════════════════════════════════
+        //  GAME SPRITES — CC0 (stones, bushes, crystal)
+        //  Extracted from sprite sheets
+        // ═══════════════════════════════════════════════
+        const gameSprites = { stones: [], bushes: [], crystal: null, trees2: [] };
+        let gameSpritesReady = false;
+
+        function extractTileCanvases(img, tileW, tileH, cols, rows) {
+            const tiles = [];
+            if (!img || !img.complete || img.naturalWidth === 0) return tiles;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const c = document.createElement('canvas');
+                    c.width = tileW; c.height = tileH;
+                    const cx = c.getContext('2d');
+                    cx.drawImage(img, col * tileW, row * tileH, tileW, tileH, 0, 0, tileW, tileH);
+                    tiles.push(c);
+                }
+            }
+            return tiles;
+        }
+
+        function getPseudoRandom(x, y, max) {
+            return ((x * 7 + y * 13 + x * y * 3) % max + max) % max;
+        }
+
+        function loadGameSprites() {
+            const sheets = [
+                { key: 'stones',  src: 'sprites_stones.png',  tileW: 16, tileH: 16, cols: 3, rows: 2 },
+                { key: 'bushes',  src: 'sprites_bushes.png',  tileW: 16, tileH: 16, cols: 2, rows: 2 },
+                { key: 'trees2',  src: 'sprites_trees.png',   tileW: 16, tileH: 16, cols: 4, rows: 8 },
+            ];
+            let loaded = 0;
+            let total = sheets.length + 1; // +1 for crystal
+
+            function checkReady() {
+                loaded++;
+                if (loaded < total) return;
+                gameSpritesReady = true;
+            }
+
+            // Load crystal separately (single 32x32 sprite, drawn at 20x20)
+            const crystalImg = new Image();
+            crystalImg.onload = function() {
+                const c = document.createElement('canvas');
+                c.width = 20; c.height = 20;
+                const cx = c.getContext('2d');
+                cx.drawImage(crystalImg, 0, 0, 32, 32, 0, 0, 20, 20);
+                gameSprites.crystal = c;
+                checkReady();
+            };
+            crystalImg.onerror = checkReady;
+            crystalImg.src = 'sprites_crystal.png';
+
+            // Load tile sheets
+            for (const sheet of sheets) {
+                const img = new Image();
+                img.onload = function() {
+                    gameSprites[sheet.key] = extractTileCanvases(img, sheet.tileW, sheet.tileH, sheet.cols, sheet.rows);
+                    checkReady();
+                };
+                img.onerror = checkReady;
+                img.src = sheet.src;
+            }
+        }
+        loadGameSprites();
 
         // Draw a tiled texture at a tile position
         function drawTexture(type, px, py) {
@@ -2302,7 +2526,7 @@
                     fishes: fishes.map(f => ({x: f.x, y: f.y})),
                     stats: globalStats,
                     cam: {x: camX, y: camY, z: zoom},
-                    misc: { timeTick, nextVillageId, currentMapType }
+                    misc: { timeTick, nextVillageId, currentMapType, currentClimate }
                 };
                 localStorage.setItem('demirgobox_save', JSON.stringify(saveData));
             } catch (e) {
@@ -2344,6 +2568,8 @@
 
                 globalStats = data.stats; camX = data.cam.x; camY = data.cam.y; zoom = data.cam.z;
                 timeTick = data.misc.timeTick; nextVillageId = data.misc.nextVillageId; currentMapType = data.misc.currentMapType;
+                currentClimate = data.misc.currentClimate || 'temperate';
+                loadTerrainTextures(currentClimate);
                 particles = []; floatingTexts = []; selectedVillageId = null;
                 
                 updateMinimap();
@@ -3423,6 +3649,8 @@
                     if(t.type === TERRAIN.SAND && Math.random() < 0.3) t.type = TERRAIN.GRASS;
                 }
             }
+            // Cargar texturas del clima
+            loadTerrainTextures(climate);
             // Mostrar nombre del clima al inicio
             setTimeout(() => spawnFloatingText(cols/2, rows/2, `Clima: ${climate.toUpperCase()}`, '#f1c40f'), 600);
         }
@@ -3735,12 +3963,21 @@
                 else if(tile.type === TERRAIN.GRASS) {
                     if (!drawTexture(TERRAIN.GRASS, px, py)) {
                         let shade = ((x*3 + y*7) % 5);
-                        const grassShades = ['#2E7D32','#388E3C','#33691E','#43A047','#2E7D32'];
-                        ctx.fillStyle = grassShades[shade]; ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+                        if(currentClimate === 'cold') {
+                            const snowShades = ['#d8e8f0','#c8d8e8','#e0e8f0','#b8c8d8','#d0e0e8'];
+                            ctx.fillStyle = snowShades[shade]; ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+                        } else {
+                            const grassShades = ['#2E7D32','#388E3C','#33691E','#43A047','#2E7D32'];
+                            ctx.fillStyle = grassShades[shade]; ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+                        }
                     }
                     // Grass blades detail
                     if(zoom > 1.5 && !tile.hasHouse && !tile.hasRoad && (x+y)%4===0) {
-                        ctx.fillStyle = 'rgba(100,200,80,0.4)'; ctx.fillRect(px+3,py+2,1,3); ctx.fillRect(px+10,py+4,1,3); ctx.fillRect(px+16,py+1,1,4);
+                        if(currentClimate === 'cold') {
+                            ctx.fillStyle = 'rgba(200,220,240,0.5)'; ctx.fillRect(px+3,py+2,1,3); ctx.fillRect(px+10,py+4,1,3); ctx.fillRect(px+16,py+1,1,4);
+                        } else {
+                            ctx.fillStyle = 'rgba(100,200,80,0.4)'; ctx.fillRect(px+3,py+2,1,3); ctx.fillRect(px+10,py+4,1,3); ctx.fillRect(px+16,py+1,1,4);
+                        }
                     }
                 }
                 else { 
@@ -3756,18 +3993,52 @@
                     } else {
                         if (!drawTexture(TERRAIN.FOREST, px, py)) {
                             let shade = ((x*5 + y*3) % 3);
-                            const fShades = ['#1B5E20','#2E7D32','#33691E'];
-                            ctx.fillStyle = fShades[shade]; ctx.fillRect(px,py,TILE_SIZE,TILE_SIZE); 
+                            if(currentClimate === 'cold') {
+                                const fShades = ['#b0bec5','#cfd8dc','#b0bec5'];
+                                ctx.fillStyle = fShades[shade]; ctx.fillRect(px,py,TILE_SIZE,TILE_SIZE);
+                            } else {
+                                const fShades = ['#1B5E20','#2E7D32','#33691E'];
+                                ctx.fillStyle = fShades[shade]; ctx.fillRect(px,py,TILE_SIZE,TILE_SIZE);
+                            }
+                        }
+                        if(currentClimate === 'cold') {
+                            ctx.fillStyle = 'rgba(220,235,245,0.55)'; ctx.fillRect(px,py,TILE_SIZE,TILE_SIZE);
                         }
                     }
                     // Shadow
                     ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.ellipse(px+11, py+17, 7, 3, 0, 0, Math.PI*2); ctx.fill(); 
-                    // Trunk
-                    ctx.fillStyle = '#5D4037'; ctx.fillRect(px+8, py+12, 4, 8);
-                    // Canopy (layered)
-                    ctx.fillStyle = '#1B5E20'; ctx.beginPath(); ctx.arc(px+10, py+10, 9, 0, Math.PI*2); ctx.fill(); 
-                    ctx.fillStyle = '#2E7D32'; ctx.beginPath(); ctx.arc(px+10, py+8, 7, 0, Math.PI*2); ctx.fill(); 
-                    ctx.fillStyle = '#43A047'; ctx.beginPath(); ctx.arc(px+9, py+7, 4, 0, Math.PI*2); ctx.fill(); 
+                    // Draw tree sprite (tinted per climate)
+                    const sprites = treeSprites[currentClimate];
+                    if (sprites) {
+                        const useLight = ((x + y * 7) % 3 !== 0);
+                        const spr = useLight ? sprites.light : sprites.dark;
+                        if (spr && spr.width > 0) {
+                            const sx = px + TILE_SIZE/2 - spr.width/2;
+                            const sy = py + TILE_SIZE - spr.height;
+                            ctx.drawImage(spr, sx, sy);
+                        }
+                        // Additional tree variety from CC0 forest tileset
+                        if (gameSpritesReady && gameSprites.trees2.length > 0 && getPseudoRandom(x, y, 7) === 0) {
+                            const t2 = gameSprites.trees2[getPseudoRandom(x+3, y+5, gameSprites.trees2.length)];
+                            const t2scale = currentClimate === 'cold' ? 0.7 : 0.75;
+                            const t2alpha = currentClimate === 'cold' ? 0.4 : 0.3;
+                            ctx.globalAlpha = t2alpha;
+                            ctx.drawImage(t2, px+1, py+4, t2.width*t2scale, t2.height*t2scale);
+                            ctx.globalAlpha = 1;
+                        }
+                    } else {
+                        // Fallback: procedural trunk + canopy
+                        ctx.fillStyle = '#5D4037'; ctx.fillRect(px+8, py+12, 4, 8);
+                        if(currentClimate === 'cold') {
+                            ctx.fillStyle = '#e8e8e8'; ctx.beginPath(); ctx.arc(px+10, py+10, 9, 0, Math.PI*2); ctx.fill(); 
+                            ctx.fillStyle = '#f5f5f5'; ctx.beginPath(); ctx.arc(px+10, py+8, 7, 0, Math.PI*2); ctx.fill(); 
+                            ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(px+9, py+7, 4, 0, Math.PI*2); ctx.fill();
+                        } else {
+                            ctx.fillStyle = '#1B5E20'; ctx.beginPath(); ctx.arc(px+10, py+10, 9, 0, Math.PI*2); ctx.fill(); 
+                            ctx.fillStyle = '#2E7D32'; ctx.beginPath(); ctx.arc(px+10, py+8, 7, 0, Math.PI*2); ctx.fill(); 
+                            ctx.fillStyle = '#43A047'; ctx.beginPath(); ctx.arc(px+9, py+7, 4, 0, Math.PI*2); ctx.fill(); 
+                        }
+                    } 
                 } 
                 else if(tile.type === TERRAIN.FIRE) { 
                     if (!drawTexture(TERRAIN.FIRE, px, py)) {
@@ -3792,13 +4063,21 @@
                             ctx.fillStyle = '#546E7A'; ctx.fillRect(px,py,TILE_SIZE,TILE_SIZE);
                         }
                     }
-                    // Rock cluster
-                    ctx.globalAlpha = 0.5;
-                    ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.ellipse(px+10, py+18, 8, 3, 0, 0, Math.PI*2); ctx.fill(); 
-                    ctx.fillStyle = '#607D8B'; ctx.beginPath(); ctx.moveTo(px+3, py+17); ctx.lineTo(px+10, py+4); ctx.lineTo(px+17, py+17); ctx.fill();
-                    ctx.fillStyle = '#B0BEC5'; ctx.beginPath(); ctx.moveTo(px+6, py+10); ctx.lineTo(px+10, py+5); ctx.lineTo(px+14, py+10); ctx.fill();
-                    ctx.fillStyle = '#78909C'; ctx.beginPath(); ctx.moveTo(px+3, py+17); ctx.lineTo(px+10, py+12); ctx.lineTo(px+17, py+17); ctx.fill();
-                    ctx.globalAlpha = 1;
+                    // Stone sprite
+                    const stonesList = gameSprites.stones;
+                    if (gameSpritesReady && stonesList.length > 0) {
+                        const sidx = getPseudoRandom(x, y, stonesList.length);
+                        const s = stonesList[sidx];
+                        ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.ellipse(px+10, py+18, 7, 2, 0, 0, Math.PI*2); ctx.fill();
+                        ctx.drawImage(s, px+2, py+3);
+                    } else {
+                        ctx.globalAlpha = 0.5;
+                        ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.ellipse(px+10, py+18, 8, 3, 0, 0, Math.PI*2); ctx.fill(); 
+                        ctx.fillStyle = '#607D8B'; ctx.beginPath(); ctx.moveTo(px+3, py+17); ctx.lineTo(px+10, py+4); ctx.lineTo(px+17, py+17); ctx.fill();
+                        ctx.fillStyle = '#B0BEC5'; ctx.beginPath(); ctx.moveTo(px+6, py+10); ctx.lineTo(px+10, py+5); ctx.lineTo(px+14, py+10); ctx.fill();
+                        ctx.fillStyle = '#78909C'; ctx.beginPath(); ctx.moveTo(px+3, py+17); ctx.lineTo(px+10, py+12); ctx.lineTo(px+17, py+17); ctx.fill();
+                        ctx.globalAlpha = 1;
+                    }
                 } 
                 else if(tile.type === TERRAIN.GOLD) {
                     if(tile.hasRoad) { 
@@ -3808,24 +4087,53 @@
                             ctx.fillStyle = '#5D4E00'; ctx.fillRect(px,py,TILE_SIZE,TILE_SIZE);
                         }
                     }
-                    ctx.globalAlpha = 0.5;
-                    ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.ellipse(px+10, py+18, 8, 3, 0, 0, Math.PI*2); ctx.fill(); 
-                    ctx.fillStyle = '#F9A825'; ctx.beginPath(); ctx.moveTo(px+3, py+17); ctx.lineTo(px+10, py+4); ctx.lineTo(px+17, py+17); ctx.fill();
-                    ctx.fillStyle = '#FFD54F'; ctx.beginPath(); ctx.moveTo(px+7, py+10); ctx.lineTo(px+10, py+5); ctx.lineTo(px+13, py+10); ctx.fill();
-                    ctx.globalAlpha = 1;
-                    // Gold shimmer
-                    let gs = Math.sin(time/300 + x*0.7 + y*0.5);
-                    ctx.fillStyle = `rgba(255,255,150,${0.1 + gs*0.15})`; ctx.beginPath(); ctx.arc(px+10,py+10,5,0,Math.PI*2); ctx.fill();
+                    // Crystal sprite
+                    if (gameSpritesReady && gameSprites.crystal) {
+                        ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.ellipse(px+10, py+18, 7, 2, 0, 0, Math.PI*2); ctx.fill();
+                        ctx.drawImage(gameSprites.crystal, px+0, py+1);
+                        // Gold shimmer
+                        let gs = Math.sin(time/300 + x*0.7 + y*0.5);
+                        ctx.fillStyle = `rgba(255,255,150,${0.1 + gs*0.15})`; ctx.beginPath(); ctx.arc(px+10,py+10,5,0,Math.PI*2); ctx.fill();
+                    } else {
+                        ctx.globalAlpha = 0.5;
+                        ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.ellipse(px+10, py+18, 8, 3, 0, 0, Math.PI*2); ctx.fill(); 
+                        ctx.fillStyle = '#F9A825'; ctx.beginPath(); ctx.moveTo(px+3, py+17); ctx.lineTo(px+10, py+4); ctx.lineTo(px+17, py+17); ctx.fill();
+                        ctx.fillStyle = '#FFD54F'; ctx.beginPath(); ctx.moveTo(px+7, py+10); ctx.lineTo(px+10, py+5); ctx.lineTo(px+13, py+10); ctx.fill();
+                        ctx.globalAlpha = 1;
+                        // Gold shimmer
+                        let gs = Math.sin(time/300 + x*0.7 + y*0.5);
+                        ctx.fillStyle = `rgba(255,255,150,${0.1 + gs*0.15})`; ctx.beginPath(); ctx.arc(px+10,py+10,5,0,Math.PI*2); ctx.fill();
+                    }
                 }
                 
-                // Berry bushes
+                // Berry bushes — white for cold climate
                 if (tile.hasBerries && !tile.hasHouse) {
-                    ctx.fillStyle = '#1B5E20'; ctx.beginPath(); ctx.arc(px+10, py+11, 5, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = '#388E3C'; ctx.beginPath(); ctx.arc(px+7, py+13, 4, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = '#43A047'; ctx.beginPath(); ctx.arc(px+13, py+13, 4, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = '#C62828'; ctx.beginPath(); ctx.arc(px+8, py+9, 1.8, 0, Math.PI*2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(px+12, py+11, 1.8, 0, Math.PI*2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(px+10, py+14, 1.8, 0, Math.PI*2); ctx.fill();
+                    const bushList = gameSprites.bushes;
+                    if (gameSpritesReady && bushList.length > 0) {
+                        const bidx = getPseudoRandom(x, y, bushList.length);
+                        const b = bushList[bidx];
+                        ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.ellipse(px+10, py+18, 6, 2, 0, 0, Math.PI*2); ctx.fill();
+                        ctx.globalAlpha = currentClimate === 'cold' ? 0.7 : 0.9;
+                        ctx.drawImage(b, px+2, py+4);
+                        ctx.globalAlpha = 1;
+                        // Berries
+                        ctx.fillStyle = '#C62828'; ctx.beginPath(); ctx.arc(px+8, py+9, 1.8, 0, Math.PI*2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(px+12, py+11, 1.8, 0, Math.PI*2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(px+10, py+14, 1.8, 0, Math.PI*2); ctx.fill();
+                    } else {
+                        if(currentClimate === 'cold') {
+                            ctx.fillStyle = '#c0c0c0'; ctx.beginPath(); ctx.arc(px+10, py+11, 5, 0, Math.PI*2); ctx.fill();
+                            ctx.fillStyle = '#d8d8d8'; ctx.beginPath(); ctx.arc(px+7, py+13, 4, 0, Math.PI*2); ctx.fill();
+                            ctx.fillStyle = '#e8e8e8'; ctx.beginPath(); ctx.arc(px+13, py+13, 4, 0, Math.PI*2); ctx.fill();
+                        } else {
+                            ctx.fillStyle = '#1B5E20'; ctx.beginPath(); ctx.arc(px+10, py+11, 5, 0, Math.PI*2); ctx.fill();
+                            ctx.fillStyle = '#388E3C'; ctx.beginPath(); ctx.arc(px+7, py+13, 4, 0, Math.PI*2); ctx.fill();
+                            ctx.fillStyle = '#43A047'; ctx.beginPath(); ctx.arc(px+13, py+13, 4, 0, Math.PI*2); ctx.fill();
+                        }
+                        ctx.fillStyle = '#C62828'; ctx.beginPath(); ctx.arc(px+8, py+9, 1.8, 0, Math.PI*2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(px+12, py+11, 1.8, 0, Math.PI*2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(px+10, py+14, 1.8, 0, Math.PI*2); ctx.fill();
+                    }
                 }
 
                 // Roads — wider, textured, age-based
@@ -5783,10 +6091,22 @@
             blessed: '✨ <b>Bendecido</b>: Terreno fértil, recursos abundantes, pocos desastres. Ideal para ver civilizaciones florecer.'
         };
 
+        const MAP_DESCRIPTIONS = {
+            random: '🌍 Forma aleatoria. Cada partida es un mundo nuevo e impredecible.',
+            pangea: '🟢 Un solo supercontinente. Ejércitos terrestres dominan, el comercio marítimo es limitado.',
+            archipelago: '🏝️ Muchas islas pequeñas. Las civilizaciones se aíslan y compiten por recursos.',
+            ring: '🍩 Continente en anillo. El centro es océano, las costas son fértiles y estratégicas.',
+            continents: '🌎 Varios continentes separados. La tecnología naval es clave para la expansión.',
+            desert: '🏜️ Terreno árido dominado por arena. Poca vegetación, mucho oro subterráneo.',
+            volcanic: '🌋 Montañas volcánicas y lava. Terreno peligroso pero extremadamente fértil.',
+            frozen: '❄️ Tundra helada. Recursos escasos, los humanos luchan por sobrevivir.'
+        };
+
         function selectMap(type) {
             selectedMapType = type;
             document.querySelectorAll('.map-card:not(.climate-card)').forEach(c => c.style.borderColor = '');
             event.currentTarget.style.borderColor = '#f1c40f';
+            document.getElementById('map-desc').innerHTML = MAP_DESCRIPTIONS[type] || '';
         }
 
         function selectClimate(climate) {
