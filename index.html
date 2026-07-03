@@ -351,16 +351,46 @@
         #ui-layer > * { pointer-events: auto; }
 
         /* ═══════════════════════════════════════════════
-           TOP PANEL — DIVINE TOOLBAR
+           TOP PANEL — DIVINE TOOLBAR (Draggable + Collapsible)
         ═══════════════════════════════════════════════ */
         #top-panel {
             background: linear-gradient(180deg, rgba(6,8,14,0.97) 0%, rgba(10,12,18,0.94) 100%);
-            border-bottom: 1px solid rgba(232,184,75,0.2);
+            border: 1px solid rgba(232,184,75,0.2);
             padding: 8px 12px 10px;
             display: flex; flex-direction: column; align-items: center;
             box-shadow: 0 4px 30px rgba(0,0,0,0.8), 0 1px 0 rgba(232,184,75,0.1);
-            z-index: 10;
+            z-index: 50;
+            position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+            border-radius: 4px;
+            transition: opacity 0.2s, max-height 0.3s ease;
+            max-height: 200px; overflow: hidden;
+            user-select: none; -webkit-user-select: none;
         }
+        #top-panel.collapsed {
+            max-height: 36px; padding: 6px 12px;
+            cursor: grab;
+        }
+        #top-panel.collapsed .toolbar,
+        #top-panel.collapsed #power-info { display: none; }
+        #top-panel.dragging { cursor: grabbing; opacity: 0.92; transition: none; }
+
+        /* Drag handle + collapse toggle */
+        .panel-drag-handle {
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; cursor: grab; padding: 2px 0 4px; gap: 8px;
+            font-family: 'Rajdhani', monospace; font-size: 10px;
+            color: rgba(232,184,75,0.4); letter-spacing: 2px; text-transform: uppercase;
+        }
+        .panel-drag-handle:active { cursor: grabbing; }
+        .panel-collapse-btn {
+            background: none; border: 1px solid rgba(232,184,75,0.2);
+            color: rgba(232,184,75,0.5); font-size: 10px;
+            padding: 2px 6px; cursor: pointer; border-radius: 2px;
+            font-family: 'Rajdhani', monospace; transition: all 0.15s;
+            line-height: 1;
+        }
+        .panel-collapse-btn:hover { border-color: rgba(232,184,75,0.5); color: var(--gold); }
+        #top-panel.collapsed .panel-drag-handle { padding: 0; margin: 0; }
         #power-info {
             font-family: 'Rajdhani', sans-serif; font-size: 12px;
             color: var(--text-muted); margin-bottom: 7px; letter-spacing: 2px;
@@ -753,7 +783,8 @@
            RESPONSIVE — MÓVIL / TABLET
         ═══════════════════════════════════════════════ */
         @media (max-width: 600px) {
-            #top-panel { padding: 5px 6px 7px; }
+            #top-panel { padding: 4px 6px 6px; width: auto; max-width: 95vw; }
+            #top-panel.collapsed { max-height: 32px; }
             .tool-btn { padding: 6px 8px; font-size: 11px; }
             #power-info { font-size: 10px; margin-bottom: 4px; }
             .side-panel { width: 180px; padding: 10px; }
@@ -1152,6 +1183,11 @@
             white-space: nowrap;
         ">🎵 —</div>
         <div id="top-panel">
+            <div class="panel-drag-handle" id="panel-drag-handle">
+                <button class="panel-collapse-btn" id="panel-collapse-btn" onclick="toggleToolbarCollapse()" title="Colapsar/Expandir">▾</button>
+                <span>Herramientas</span>
+                <button class="panel-collapse-btn" onclick="resetToolbarPosition()" title="Restaurar posición">⟳</button>
+            </div>
             <div id="power-info">Herramienta: <span id="current-power-name" style="color:#3498db">Seleccionar</span></div>
             <div class="toolbar">
                 <button class="tool-btn btn-sys active" data-type="SELECT" data-name="Seleccionar">👆 Seleccionar</button>
@@ -5518,6 +5554,94 @@
                 document.getElementById('curse-dropdown').classList.remove('open');
             });
         });
+
+        // ═══════════════════════════════════════════════════════════════
+        //  TOOLBAR — Draggable + Collapsible
+        // ═══════════════════════════════════════════════════════════════
+        (function() {
+            const panel = document.getElementById('top-panel');
+            const handle = document.getElementById('panel-drag-handle');
+            const collapseBtn = document.getElementById('panel-collapse-btn');
+            let isDragging = false, startX, startY, startLeft, startTop;
+
+            // Collapse / Expand
+            window.toggleToolbarCollapse = function() {
+                panel.classList.toggle('collapsed');
+                collapseBtn.textContent = panel.classList.contains('collapsed') ? '▴' : '▾';
+            };
+
+            // Reset position
+            window.resetToolbarPosition = function() {
+                panel.style.left = '50%';
+                panel.style.top = '10px';
+                panel.style.transform = 'translateX(-50%)';
+                panel.classList.remove('collapsed');
+                collapseBtn.textContent = '▾';
+            };
+
+            // Drag — Mouse
+            handle.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.panel-collapse-btn')) return;
+                isDragging = true;
+                panel.classList.add('dragging');
+                const rect = panel.getBoundingClientRect();
+                startLeft = rect.left;
+                startTop = rect.top;
+                startX = e.clientX;
+                startY = e.clientY;
+                panel.style.transform = 'none';
+                panel.style.left = startLeft + 'px';
+                panel.style.top = startTop + 'px';
+                e.preventDefault();
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                let newLeft = startLeft + (e.clientX - startX);
+                let newTop = startTop + (e.clientY - startY);
+                newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - panel.offsetWidth));
+                newTop = Math.max(0, Math.min(newTop, window.innerHeight - panel.offsetHeight));
+                panel.style.left = newLeft + 'px';
+                panel.style.top = newTop + 'px';
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                panel.classList.remove('dragging');
+            });
+
+            // Drag — Touch
+            handle.addEventListener('touchstart', (e) => {
+                if (e.target.closest('.panel-collapse-btn')) return;
+                isDragging = true;
+                panel.classList.add('dragging');
+                const rect = panel.getBoundingClientRect();
+                const t = e.touches[0];
+                startLeft = rect.left;
+                startTop = rect.top;
+                startX = t.clientX;
+                startY = t.clientY;
+                panel.style.transform = 'none';
+                panel.style.left = startLeft + 'px';
+                panel.style.top = startTop + 'px';
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const t = e.touches[0];
+                let newLeft = startLeft + (t.clientX - startX);
+                let newTop = startTop + (t.clientY - startY);
+                newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - panel.offsetWidth));
+                newTop = Math.max(0, Math.min(newTop, window.innerHeight - panel.offsetHeight));
+                panel.style.left = newLeft + 'px';
+                panel.style.top = newTop + 'px';
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => {
+                isDragging = false;
+                panel.classList.remove('dragging');
+            });
+        })();
 
         function setSpeed(s, btn) { simSettings.speed = s; document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
         function toggleSetting(setting) { let btn = document.getElementById(setting === 'war' ? 'toggle-war' : 'toggle-breed'); btn.classList.toggle('on'); if(setting === 'war') simSettings.warsEnabled = !simSettings.warsEnabled; if(setting === 'breed') simSettings.breedEnabled = !simSettings.breedEnabled; }
