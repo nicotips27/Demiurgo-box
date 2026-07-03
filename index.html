@@ -1798,6 +1798,7 @@
         let currentTool = { id: 'SELECT', type: 'select' };
         let brushRadius = 1; let hoverTx = -1, hoverTy = -1; // Variables de pincel y cursor
         let isDrawing = false; let nextVillageId = 1; let selectedVillageId = null; let currentMapType = 'random';
+        let villagePanelManuallyClosed = false;
         let currentClimate = 'temperate'; let selectedMapType = null; let selectedClimate = null;
         let hasActiveGame = false;
         
@@ -3642,10 +3643,13 @@
         }
 
         function updateVillagePanel() {
-            if(!selectedVillageId) { vPanel.style.display = 'none'; vPanel.classList.remove('hidden'); return; }
+            if(!selectedVillageId) { vPanel.style.display = 'none'; vPanel.classList.remove('hidden'); villagePanelManuallyClosed = false; return; }
             let v = villages.find(v => v.id === selectedVillageId);
-            if(!v) { selectedVillageId = null; vPanel.style.display = 'none'; vPanel.classList.remove('hidden'); return; }
+            if(!v) { selectedVillageId = null; vPanel.style.display = 'none'; vPanel.classList.remove('hidden'); villagePanelManuallyClosed = false; return; }
             
+            // Si el usuario cerró manualmente, no mostrar
+            if (villagePanelManuallyClosed) { vPanel.style.display = 'none'; return; }
+
             vPanel.style.display = 'flex';
             vPanel.classList.remove('hidden');
             document.getElementById('vp-name').innerText = v.name;
@@ -4854,7 +4858,7 @@
         function applyPower(tx, ty) {
             if (tx < 0 || tx >= cols || ty < 0 || ty >= rows) return;
             let type = currentTool.type; let id = currentTool.id;
-            if (type === 'select') { let t = grid[tx][ty]; if(t.ownerId) { selectedVillageId = t.ownerId; updateVillagePanel(); AudioSystem.play('click'); } }
+            if (type === 'select') { let t = grid[tx][ty]; if(t.ownerId) { selectedVillageId = t.ownerId; villagePanelManuallyClosed = false; updateVillagePanel(); AudioSystem.play('click'); } }
             else if (type === 'terrain') {
                 let placed = false;
                 for(let i = -brushRadius; i <= brushRadius; i++) { for(let j = -brushRadius; j <= brushRadius; j++) {
@@ -5676,6 +5680,7 @@
         // ═══════════════════════════════════════════════════════════════
         window.closeSidePanel = function(id) {
             document.getElementById(id).classList.add('hidden');
+            if (id === 'village-panel') villagePanelManuallyClosed = true;
         };
 
         (function() {
