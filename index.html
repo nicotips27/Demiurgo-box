@@ -450,20 +450,39 @@
             background: linear-gradient(160deg, rgba(6,9,16,0.94), rgba(10,8,5,0.94));
             border: 1px solid rgba(232,184,75,0.18);
             border-top: 2px solid rgba(232,184,75,0.35);
-            padding: 14px; border-radius: 3px; z-index: 10;
+            padding: 0; border-radius: 3px; z-index: 10;
             display: flex; flex-direction: column; width: 220px;
             backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            transition: box-shadow 0.3s ease, opacity 0.3s ease;
             box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 20px rgba(0,0,0,0.4);
+            user-select: none; -webkit-user-select: none;
         }
+        .side-panel.dragging { cursor: grabbing; opacity: 0.9; transition: none; }
+        .side-panel.hidden { display: none !important; }
         #sim-panel { left: 16px; top: 12px; }
         #village-panel { right: 16px; top: 115px; display: none; }
+
+        /* Panel drag handle */
+        .side-panel-drag {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 10px; cursor: grab;
+            border-bottom: 1px solid rgba(232,184,75,0.15);
+            background: rgba(232,184,75,0.03);
+        }
+        .side-panel-drag:active { cursor: grabbing; }
+        .side-panel-close {
+            background: none; border: 1px solid rgba(232,184,75,0.2);
+            color: rgba(232,184,75,0.5); font-size: 11px;
+            width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; border-radius: 2px; transition: all 0.15s;
+            line-height: 1; padding: 0;
+        }
+        .side-panel-close:hover { border-color: #e74c3c; color: #e74c3c; }
 
         .panel-header {
             display: flex; justify-content: space-between; align-items: center;
             cursor: pointer;
-            border-bottom: 1px solid rgba(232,184,75,0.15);
-            padding-bottom: 8px; margin-bottom: 12px;
+            padding: 8px 10px; margin-bottom: 0;
         }
         .panel-title {
             font-family: 'Cinzel', serif; font-size: 11px; color: var(--gold);
@@ -474,6 +493,7 @@
         .panel-content {
             display: flex; flex-direction: column; gap: 9px;
             overflow: hidden; transition: max-height 0.3s ease, opacity 0.2s ease; max-height: 600px;
+            padding: 10px 14px 14px;
         }
         .side-panel.minimized .panel-content { max-height: 0; opacity: 0; pointer-events: none; }
         .side-panel.minimized .panel-header { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
@@ -1238,8 +1258,12 @@
 
         <!-- PANEL IZQUIERDO: Global -->
         <div id="sim-panel" class="side-panel">
+            <div class="side-panel-drag" data-panel="sim-panel">
+                <span class="panel-title">MUNDO GLOBAL</span>
+                <button class="side-panel-close" onclick="closeSidePanel('sim-panel')" title="Cerrar">✕</button>
+            </div>
             <div class="panel-header" onclick="document.getElementById('sim-panel').classList.toggle('minimized'); AudioSystem.play('click');">
-                <div class="panel-title">MUNDO GLOBAL</div><div class="toggle-icon">▼</div>
+                <div class="panel-title" style="font-size:9px;color:#7a6a50;">▼ Datos</div><div class="toggle-icon">▼</div>
             </div>
             <div class="panel-content">
                 <div class="stat-row"><span>Población:</span> <strong id="stat-pop">0</strong></div>
@@ -1274,8 +1298,12 @@
 
         <!-- PANEL DERECHO: Aldea Seleccionada -->
         <div id="village-panel" class="side-panel">
+            <div class="side-panel-drag" data-panel="village-panel">
+                <span class="panel-title" id="vp-name" style="font-size: 13px; letter-spacing: 2px;">Aldea</span>
+                <button class="side-panel-close" onclick="closeSidePanel('village-panel')" title="Cerrar">✕</button>
+            </div>
             <div class="panel-header" onclick="document.getElementById('village-panel').classList.toggle('minimized'); AudioSystem.play('click');">
-                <div class="panel-title" id="vp-name" style="font-size: 14px; letter-spacing: 2px;">Aldea</div><div class="toggle-icon">▼</div>
+                <div class="panel-title" style="font-size:9px;color:#7a6a50;">▼ Datos</div><div class="toggle-icon">▼</div>
             </div>
             <div class="panel-content">
                 <div class="stat-row" style="justify-content: center; margin-bottom: 8px;"><span id="vp-age" style="color: var(--gold-dim); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-family: 'Cinzel', serif;">Edad</span></div>
@@ -3615,11 +3643,12 @@
         }
 
         function updateVillagePanel() {
-            if(!selectedVillageId) { vPanel.style.display = 'none'; return; }
+            if(!selectedVillageId) { vPanel.style.display = 'none'; vPanel.classList.remove('hidden'); return; }
             let v = villages.find(v => v.id === selectedVillageId);
-            if(!v) { selectedVillageId = null; vPanel.style.display = 'none'; return; }
+            if(!v) { selectedVillageId = null; vPanel.style.display = 'none'; vPanel.classList.remove('hidden'); return; }
             
             vPanel.style.display = 'flex';
+            vPanel.classList.remove('hidden');
             document.getElementById('vp-name').innerText = v.name;
             document.getElementById('vp-name').style.color = v.color;
             document.getElementById('vp-age').innerText = AGES_NAMES[v.age];
@@ -5640,6 +5669,80 @@
             window.addEventListener('touchend', () => {
                 isDragging = false;
                 panel.classList.remove('dragging');
+            });
+        })();
+
+        // ═══════════════════════════════════════════════════════════════
+        //  SIDE PANELS — Draggable + Closeable
+        // ═══════════════════════════════════════════════════════════════
+        window.closeSidePanel = function(id) {
+            document.getElementById(id).classList.add('hidden');
+        };
+
+        (function() {
+            document.querySelectorAll('.side-panel-drag').forEach(handle => {
+                const panelId = handle.getAttribute('data-panel');
+                const panel = document.getElementById(panelId);
+                if (!panel) return;
+
+                let isDragging = false, startX, startY, startLeft, startTop;
+
+                // Mouse drag
+                handle.addEventListener('mousedown', (e) => {
+                    if (e.target.closest('.side-panel-close')) return;
+                    isDragging = true;
+                    panel.classList.add('dragging');
+                    const rect = panel.getBoundingClientRect();
+                    startLeft = rect.left;
+                    startTop = rect.top;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    e.preventDefault();
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    let newLeft = startLeft + (e.clientX - startX);
+                    let newTop = startTop + (e.clientY - startY);
+                    newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - panel.offsetWidth));
+                    newTop = Math.max(0, Math.min(newTop, window.innerHeight - panel.offsetHeight));
+                    panel.style.left = newLeft + 'px';
+                    panel.style.top = newTop + 'px';
+                    panel.style.right = 'auto';
+                });
+
+                window.addEventListener('mouseup', () => {
+                    if (isDragging) { isDragging = false; panel.classList.remove('dragging'); }
+                });
+
+                // Touch drag
+                handle.addEventListener('touchstart', (e) => {
+                    if (e.target.closest('.side-panel-close')) return;
+                    isDragging = true;
+                    panel.classList.add('dragging');
+                    const rect = panel.getBoundingClientRect();
+                    const t = e.touches[0];
+                    startLeft = rect.left;
+                    startTop = rect.top;
+                    startX = t.clientX;
+                    startY = t.clientY;
+                }, { passive: true });
+
+                window.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    const t = e.touches[0];
+                    let newLeft = startLeft + (t.clientX - startX);
+                    let newTop = startTop + (t.clientY - startY);
+                    newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - panel.offsetWidth));
+                    newTop = Math.max(0, Math.min(newTop, window.innerHeight - panel.offsetHeight));
+                    panel.style.left = newLeft + 'px';
+                    panel.style.top = newTop + 'px';
+                    panel.style.right = 'auto';
+                }, { passive: true });
+
+                window.addEventListener('touchend', () => {
+                    if (isDragging) { isDragging = false; panel.classList.remove('dragging'); }
+                });
             });
         })();
 
