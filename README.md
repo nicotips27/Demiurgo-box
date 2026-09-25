@@ -24,6 +24,12 @@ DemiurgoBox es un simulador de dioses donde controlas el destino de civilizacion
 - **Música MP3** — Banda sonora para menú y juego
 - **Controles táctiles** — Juega en móvil con touch
 
+## Capturas
+
+![Captura 1](capturas/captura1.png)
+
+![Captura 2](capturas/captura2.png)
+
 ## Controles
 
 | Acción | PC | Móvil |
