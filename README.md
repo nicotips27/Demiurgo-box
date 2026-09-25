@@ -40,6 +40,10 @@ DemiurgoBox es un simulador de dioses donde controlas el destino de civilizacion
 | Dibujar terreno | Clic + arrastrar | Arrastrar (1 dedo) |
 | Ver info | Hover | Toque largo |
 
+## Jugar online
+
+🎮 **[Prueba el juego aquí](https://nicotips27.github.io/Demiurgo-box/)** — sin instalación, directo en tu navegador.
+
 ## Cómo jugar
 
 1. Abre `index.html` en tu navegador
