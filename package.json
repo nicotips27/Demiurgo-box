@@ -1,0 +1,22 @@
+{
+  "name": "demiurgobox",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "smoke": "npm run build && node scripts/smoke.mjs",
+    "test:needs": "node scripts/needs-test.mjs",
+    "parity": "node scripts/parity-check.mjs",
+    "verify:moved": "node scripts/verify-moved.mjs",
+    "build:atlas": "node scripts/build-atlas.mjs",
+    "shot": "node scripts/shot.mjs",
+    "split:legacy": "node scripts/extract.mjs && node scripts/transform.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vite": "^5.2.0"
+  }
+}
