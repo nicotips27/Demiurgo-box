@@ -1,8 +1,9 @@
 /**
- * Smoke test: boots the built game in headless Edge, drives it into a live
+ * Smoke test: boots the game in headless Edge, drives it into a live
  * world, captures console errors and a screenshot.
  *
- *   node scripts/smoke.mjs
+ *   node scripts/smoke.mjs              # against the local dist/ build
+ *   node scripts/smoke.mjs <url>        # against a deployed site
  */
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
@@ -16,25 +17,32 @@ const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe'
 const PORT = 4319;
 const DEBUG_PORT = 9333;
 
+/** When a URL is given we test that; otherwise we serve the local build. */
+const TARGET = process.argv[2] || null;
+
 const MIME = {
   '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.mp3': 'audio/mpeg', '.json': 'application/json',
 };
 
 // ── static server ──────────────────────────────────────────────────────────
-const server = createServer(async (req, res) => {
-  try {
-    const url = req.url.split('?')[0];
-    const rel = url === '/' ? '/index.html' : url;
-    const file = join(DIST, decodeURIComponent(rel));
-    const data = await readFile(file);
-    res.writeHead(200, { 'Content-Type': MIME[extname(file)] || 'application/octet-stream' });
-    res.end(data);
-  } catch {
-    res.writeHead(404).end('not found');
-  }
-});
-await new Promise((r) => server.listen(PORT, r));
+let server = null;
+if (!TARGET) {
+  server = createServer(async (req, res) => {
+    try {
+      const url = req.url.split('?')[0];
+      const rel = url === '/' ? '/index.html' : url;
+      const file = join(DIST, decodeURIComponent(rel));
+      const data = await readFile(file);
+      res.writeHead(200, { 'Content-Type': MIME[extname(file)] || 'application/octet-stream' });
+      res.end(data);
+    } catch {
+      res.writeHead(404).end('not found');
+    }
+  });
+  await new Promise((r) => server.listen(PORT, r));
+}
+const siteUrl = TARGET || `http://127.0.0.1:${PORT}/`;
 
 // ── headless browser ───────────────────────────────────────────────────────
 const profile = join(process.env.TEMP, 'opencode', 'smoke-profile');
@@ -47,7 +55,7 @@ const browser = spawn(EDGE, [
   'about:blank',
 ], { stdio: 'ignore' });
 
-const cleanup = () => { try { browser.kill(); } catch {} server.close(); };
+const cleanup = () => { try { browser.kill(); } catch {} if (server) server.close(); };
 process.on('exit', cleanup);
 
 async function targetWs() {
@@ -106,7 +114,7 @@ await send('Emulation.setDeviceMetricsOverride', {
   width: 1280, height: 720, deviceScaleFactor: 1, mobile: false,
 });
 
-const url = `http://127.0.0.1:${PORT}/`;
+const url = siteUrl;
 console.log('navigating to', url);
 await send('Page.navigate', { url });
 await sleep(3500);
